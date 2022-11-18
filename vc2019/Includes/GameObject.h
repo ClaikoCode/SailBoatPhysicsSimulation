@@ -16,6 +16,13 @@ public:
 	virtual void Update() = 0;
 
 protected:
+	void SetMesh(const geom::Source& geometrySource);
+
+private:
+	void DefaultInit();
+
+protected:
+	gl::GlslProgRef m_ShaderRef;
 	gl::BatchRef m_Mesh;
 	TriMeshRef m_TriMesh;
 
