@@ -8,7 +8,7 @@ public:
 
 	Transform();
 	Transform(const Transform& other) = default;
-	Transform(const vec3 pos, const vec3 rot, const vec3 scale);
+	Transform(const vec3 pos, const vec3 rot = vec3(0.0f), const vec3 scale = vec3(1.0f));
 
 	mat4 GetTransformMatrix();
 

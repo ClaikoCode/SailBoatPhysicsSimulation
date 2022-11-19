@@ -60,7 +60,10 @@ void PhysicsObject::PhysicsUpdate(const float deltaTime)
 
 void PhysicsObject::Draw()
 {
-
+	gl::ScopedModelMatrix model;
+	gl::multModelMatrix(m_Transform.GetTransformMatrix());
+	gl::ScopedColor color(Colorf(CM_RGB, vec3(1.0f)));
+	m_Mesh->draw();
 }
 
 void PhysicsObject::ApplyForce(const vec3 totalForce, const float deltaTime)

@@ -27,7 +27,7 @@ public:
 private:
 	void DefaultInit();
 
-protected:
+public:
 	vec3 m_Velocity;
 	vec3 m_AngularVelocity;
 

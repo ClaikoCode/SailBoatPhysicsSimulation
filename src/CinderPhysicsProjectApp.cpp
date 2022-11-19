@@ -40,11 +40,14 @@ void CinderPhysicsProjectApp::mouseDown( MouseEvent event )
 
 void CinderPhysicsProjectApp::update()
 {
+	m_Scene.UpdateScene();
 }
 
 void CinderPhysicsProjectApp::draw()
 {
-	gl::clear( Color( 0, 0, 0 ) ); 
+	gl::clear( Color( 0, 0, 0 ) );
+
+	m_Scene.DrawScene();
 }
 
 CINDER_APP( CinderPhysicsProjectApp, RendererGl )
