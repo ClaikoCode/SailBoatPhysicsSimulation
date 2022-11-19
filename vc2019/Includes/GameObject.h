@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Includes/CinderEssentials.h"
 #include "Includes/Transform.h"
 
@@ -17,6 +16,7 @@ public:
 
 	void SetMesh(const geom::Source& geometrySource);
 
+
 private:
 	void DefaultInit();
 
@@ -25,5 +25,6 @@ protected:
 	gl::BatchRef m_Mesh;
 	TriMeshRef m_TriMesh;
 
+public:
 	Transform m_Transform;
 };

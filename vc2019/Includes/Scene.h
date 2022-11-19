@@ -27,6 +27,10 @@ public:
 
 
 private:
+	template <typename T>
+	// Uses std::move to insert object into vector. !! This will destroy the object !!
+	void AddObject(T& object, std::vector<std::shared_ptr<T>>& objectVector);
+
 	void SetupCamera();
 	void SetupObjects();
 
@@ -45,3 +49,5 @@ private:
 	std::vector<std::shared_ptr<PhysicsObject>> m_PhysicsObjects;
 	std::vector<std::shared_ptr<GameObject>> m_GameObjects;
 };
+
+

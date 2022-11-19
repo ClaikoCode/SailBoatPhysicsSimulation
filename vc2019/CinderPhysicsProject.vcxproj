@@ -112,7 +112,9 @@
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="Includes\CinderEssentials.h" />
+    <ClInclude Include="Includes\FloatingObject.h" />
     <ClInclude Include="Includes\GameObject.h" />
+    <ClInclude Include="Includes\PhysicsConstants.h" />
     <ClInclude Include="Includes\ValueRandomizationVolume.h" />
     <ClInclude Include="Includes\PhysicsObject.h" />
     <ClInclude Include="Includes\Scene.h" />

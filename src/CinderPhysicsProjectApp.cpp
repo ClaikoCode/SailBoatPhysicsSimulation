@@ -24,7 +24,6 @@ public:
 	void draw() override;
 
 public:
-
 	Scene m_Scene;
 
 };
@@ -32,6 +31,10 @@ public:
 void CinderPhysicsProjectApp::setup()
 {
 	m_Scene.SetupScene();
+	WindowRef windowRef = getWindow();
+	
+	windowRef->setSize(1920, 1080);
+	windowRef->setPos(50, 50);
 }
 
 void CinderPhysicsProjectApp::mouseDown( MouseEvent event )

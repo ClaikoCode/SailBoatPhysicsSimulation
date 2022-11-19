@@ -61,6 +61,12 @@
     <ClInclude Include="Includes\ValueRandomizationVolume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Includes\FloatingObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PhysicsConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources.rc">

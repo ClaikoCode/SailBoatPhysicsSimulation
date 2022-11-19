@@ -47,6 +47,15 @@ PhysicsObject::PhysicsObject(
 	m_MomentOfInertia = momentOfInertia;
 }
 
+PhysicsObject::PhysicsObject(const float mass, const float momentOfInertia) 
+	: GameObject()
+{
+	DefaultInit();
+
+	m_Mass = mass;
+	m_MomentOfInertia = momentOfInertia;
+}
+
 void PhysicsObject::Update()
 {
 	
@@ -54,38 +63,72 @@ void PhysicsObject::Update()
 
 void PhysicsObject::PhysicsUpdate(const float deltaTime)
 {
-	m_Transform.UpdatePosition(m_Velocity * deltaTime);
-	m_Transform.UpdateRotation(m_AngularVelocity * deltaTime);
+	if (m_IsStatic == false) 
+	{
+		m_Velocity += (m_TotalAddedForce / m_Mass) * deltaTime; // F = m * a
+		m_AngularVelocity += (m_TotalAddedTorque / m_MomentOfInertia) * deltaTime; // T = I * alpha
+
+		m_Transform.UpdateLocalPosition(m_Velocity * deltaTime);
+		m_Transform.UpdateLocalRotation(m_AngularVelocity * deltaTime);
+	}
+
+	ResetTotalForceAndTorque();
 }
 
 void PhysicsObject::Draw()
 {
 	gl::ScopedModelMatrix model;
 	gl::multModelMatrix(m_Transform.GetTransformMatrix());
-	gl::ScopedColor color(Colorf(CM_RGB, vec3(1.0f)));
+	gl::ScopedColor color( Colorf(CM_RGB, vec3(1.0f)) );
 	m_Mesh->draw();
 }
 
-void PhysicsObject::ApplyForce(const vec3 totalForce, const float deltaTime)
+void PhysicsObject::AddForce(const vec3 force)
 {
-	vec3 acceleration = totalForce / m_Mass;
-	m_Velocity += acceleration * deltaTime;
+	m_TotalAddedForce += force;
 }
 
-void PhysicsObject::ApplyForces(const std::vector<vec3>& forces, const float deltaTime)
+void PhysicsObject::AddForceAtPosition(const vec3 force, const vec3 position)
 {
-	vec3 totalForce = vec3(0.0f);
-	for (const vec3& force : forces)
-		totalForce += force;
+	AddForce(force);
 
-	ApplyForce(totalForce, deltaTime);
+	vec3 centerOfMassToPos = position - m_Transform.GetGlobalPosition();
+	m_TotalAddedTorque += glm::cross(centerOfMassToPos, force);
+}
+
+void PhysicsObject::AddForces(const std::vector<vec3>& forces)
+{
+	for (const vec3& force : forces)
+		AddForce(force);
+}
+
+void PhysicsObject::AddTorque(const vec3 torque)
+{
+	m_TotalAddedTorque += torque;
+}
+
+void PhysicsObject::AddTorques(const std::vector<vec3>& torques)
+{
+	for (const vec3& torque : torques)
+		AddTorque(torque);
+}
+
+void PhysicsObject::ResetTotalForceAndTorque()
+{
+	m_TotalAddedForce = vec3(0.0f);
+	m_TotalAddedTorque = vec3(0.0f);
 }
 
 void PhysicsObject::DefaultInit()
 {
-	m_Velocity = vec3(0.0f);
-	m_AngularVelocity = vec3(0.0f);
+	m_Velocity			= vec3(0.0f);
+	m_AngularVelocity	= vec3(0.0f);
+	m_TotalAddedForce	= vec3(0.0f);
+	m_TotalAddedTorque	= vec3(0.0f);
 
 	m_Mass = 1.0f;
 	m_MomentOfInertia = 1.0f;
+
+	m_IsStatic = false;
+	m_Parent = nullptr;
 }
