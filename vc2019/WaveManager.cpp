@@ -9,10 +9,7 @@ constexpr float DEFAULT_TIME_STEP = 0.5f;
 constexpr float DEFAULT_WAVE_LENGTH = 75.0f;
 
 WaveManager::WaveManager()
-	: m_TimePassed(0.0f)
-{
-	DefaultInit();
-}
+	: m_WaveObject(nullptr), m_TimePassed(0.0f) {}
 
 void WaveManager::CalculateWaveVerticies()
 {
@@ -37,12 +34,6 @@ void WaveManager::CalculateWaveVerticies()
 
 	triMesh->recalculateNormals();
 	m_WaveObject->UpdateBatchMesh();
-}
-
-void WaveManager::DefaultInit()
-{
-	m_WaveObject = nullptr;
-	m_TimePassed = 0.0f;
 }
 
 void WaveManager::StepTime()

@@ -12,9 +12,6 @@ public:
 
 	void StepTime();
 
-private:
-	void DefaultInit();
-
 public:
 	WaveObject* m_WaveObject;
 	float m_TimePassed;

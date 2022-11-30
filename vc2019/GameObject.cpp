@@ -7,15 +7,9 @@ constexpr bool DEFAULT_STATIC_STATE = false;
 constexpr bool DEFAULT_DRAWABLE_STATE = true;
 
 GameObject::GameObject()
-	: m_ShaderRef(_GET_DEFAULT_SHADER()),
-	m_Mesh(), 
-	m_TriMesh(),
-	m_MeshColor(DEFAULT_MODEL_COLOR),
-	m_Transform(),
-	m_IsStatic(DEFAULT_STATIC_STATE),
-	m_IsDrawable(DEFAULT_DRAWABLE_STATE) {}
+	: GameObject(Transform()) {}
 
-GameObject::GameObject(const Transform transform)
+GameObject::GameObject(const Transform& transform)
 	: m_ShaderRef(_GET_DEFAULT_SHADER()),
 	m_Mesh(),
 	m_TriMesh(),

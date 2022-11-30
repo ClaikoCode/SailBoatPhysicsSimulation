@@ -16,7 +16,7 @@ class Scene
 public:
 
 	Scene();
-	~Scene();
+	~Scene() = default;
 
 	void SetupScene();
 	void UpdateScene();

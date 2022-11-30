@@ -1,28 +1,10 @@
 #include "Includes/Transform.h"
 
 Transform::Transform()
-{
-	m_Scale = vec3(1.0f);
-	m_Position = vec3(0.0f);
-	m_Rotation = vec3(0.0f);
-
-	m_Parent = nullptr;
-}
+	: Transform(vec3(0.0f), vec3(0.0f), vec3(1.0f)) {}
 
 Transform::Transform(const vec3 pos, const vec3 rot, const vec3 scale) 
-	: m_Position(pos), m_Scale(scale), m_Rotation(rot) 
-{
-	m_Parent = nullptr;
-}
-
-//Transform::Transform(const Transform& other)
-//{
-//	m_Position = other.m_Position;
-//	m_Scale = other.m_Scale;
-//	m_Rotation = other.m_Rotation;
-//
-//
-//}
+	: m_Position(pos), m_Scale(scale), m_Rotation(rot), m_Parent(nullptr) {}
 
 cinder::mat4 Transform::GetGlobalTransform() const
 {

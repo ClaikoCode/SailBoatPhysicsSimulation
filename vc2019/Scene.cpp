@@ -13,21 +13,7 @@
 #include "Includes/NaturalConstants.h"
 
 Scene::Scene()
-{
-	m_WorldTimer = Timer(false);
-
-	m_Camera = {};
-	m_CameraUI = {};
-
-	m_PhysicsObjects = {};
-}
-
-
-Scene::~Scene()
-{
-
-}
-
+	: m_WorldTimer(false), m_Camera(), m_CameraUI(), m_PhysicsObjects(), m_GameObjects(), m_WaveManager() {}
 
 void Scene::SetupScene()
 {
@@ -35,7 +21,6 @@ void Scene::SetupScene()
 	SetupObjects();
 	SetupWater();
 }
-
 
 void Scene::UpdateScene()
 {
@@ -81,9 +66,9 @@ void Scene::SetupCamera()
 	vec3 target = vec3(0.0f);
 	m_Camera.lookAt(eyePoint, target);
 
-	float verticalFov = 40.0f;
+	float verticalFov = 80.0f;
 	float nearPlane = 0.01f;
-	float farPlane = 3000.0f;
+	float farPlane = 2000.0f;
 	m_Camera.setPerspective(verticalFov, getWindowAspectRatio(), nearPlane, farPlane);
 
 	m_CameraUI = CameraUi(&m_Camera, getWindow());
@@ -120,7 +105,7 @@ void Scene::SetupObjects()
 
 void Scene::SetupWater()
 {
-	// TODO: Uncomment wavemanager.
+	// TODO: Uncomment wave manager.
 	// m_WaveManager = WaveManager();
 }
 

@@ -15,7 +15,7 @@ public:
 	PhysicsObject(const float mass, const float momentOfInertia);
 	PhysicsObject(const vec3 velocity, const vec3 angularVelocity);
 	PhysicsObject(const Transform transform, const vec3 velocity, const vec3 angularVelocity);
-	PhysicsObject(const Transform transform, const vec3 velocity, const vec3 angularVelocity, const float mass, const float momentOfInertia);
+	PhysicsObject(const Transform& transform, const vec3 velocity, const vec3 angularVelocity, const float mass, const float momentOfInertia);
 
 	~PhysicsObject() = default;
 
@@ -41,10 +41,6 @@ protected:
 	void ResetTotalForceAndTorque();
 
 	void ApplyDrag();
-
-
-private:
-	void DefaultInit();
 
 public:
 	vec3 m_Velocity;

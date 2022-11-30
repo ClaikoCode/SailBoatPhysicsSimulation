@@ -7,7 +7,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(const Transform transform);
+	GameObject(const Transform& transform);
 
 	~GameObject() = default;
 
