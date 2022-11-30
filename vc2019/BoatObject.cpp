@@ -3,23 +3,23 @@
 
 #include "cinder/Log.h"
 
-constexpr float DEFAULT_WIDTH = 24.0f;
-constexpr float DEFAULT_DEPTH = 40.0f;
+constexpr float DEFAULT_WIDTH = 30.0f;
+constexpr float DEFAULT_DEPTH = 60.0f;
 constexpr float DEFAULT_HEIGHT = 6.0f;
 constexpr float DEFAULT_MASS = 10.0f;
 
 constexpr vec3 DEFAULT_BOAT_COLOR = vec3(107.0f, 69.0f, 54.0f) / 255.0f;
 
 // ---- DEBUG VARIABLES ----
-constexpr float _MoI_SCALING = 20.0f;
-constexpr float _MASS_SCALING = 2.5f;
+constexpr float _MoI_SCALING = 2.0f;
+constexpr float _MASS_SCALING = 1.5f;
 
 BoatObject::BoatObject()
-	: BoatObject(DEFAULT_WIDTH, DEFAULT_HEIGHT) {}
+	: BoatObject(DEFAULT_WIDTH, DEFAULT_DEPTH) {}
 
 
 BoatObject::BoatObject(const float width, const float depth)
-	: PhysicsObject(_MASS_SCALING * DEFAULT_MASS, CalculateMomentOfInertia(width, depth)),
+	: PhysicsObject(_MASS_SCALING * DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated in constructor later.
 	m_Floaters(),
 	m_WaveManager(nullptr),
 	m_SailObject(),
@@ -28,6 +28,8 @@ BoatObject::BoatObject(const float width, const float depth)
 	InitBoatBody();
 	InitSail();
 	InitFloaters();
+
+	m_MomentOfInertia = CalculateMomentOfInertia(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatBreadth);
 }
 
 BoatObject::BoatObject(const BoatObject& other) 
@@ -99,7 +101,7 @@ void BoatObject::DetachWaveManager()
 
 void BoatObject::InitBoatBody()
 {
-	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatWidth, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatDepth);
+	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatBreadth);
 	geom::Cube boatBody = geom::Cube().size(sizeVector);
 	SetMesh(boatBody);
 	SetMeshColor(DEFAULT_BOAT_COLOR);
@@ -122,8 +124,8 @@ void BoatObject::InitFloaters()
 	floater.AttachToObject(*this);
 	floater.m_IsDrawable = true;
 
-	float halfBoatLength = m_BoatDimensions.m_BoatWidth / 2.0f;
-	float halfBoatBreadth = m_BoatDimensions.m_BoatDepth / 2.0f;
+	float halfBoatLength = m_BoatDimensions.m_BoatLength / 2.0f;
+	float halfBoatBreadth = m_BoatDimensions.m_BoatBreadth / 2.0f;
 	
 	vec3 floaterPos = vec3(halfBoatLength, 0.0f, halfBoatBreadth);
 	AddFloaterPair(floater, floaterPos);
@@ -136,6 +138,8 @@ void BoatObject::InitFloaters()
 
 	floaterPos = vec3(halfBoatLength, 0.0f, 0.0f);
 	AddFloaterPair(floater, floaterPos);
+
+
 }
 
 void BoatObject::DefaultCopy(const BoatObject& other)
@@ -159,8 +163,6 @@ void BoatObject::DefaultCopy(const BoatObject& other)
 
 float BoatObject::CalculateMomentOfInertia(const float l, const float b) const
 {
-	const float l = m_BoatDimensions.m_BoatWidth;
-	const float b = m_BoatDimensions.m_BoatDepth;
 	// Boat typical MoI: (m / 48) * (4 * l^2 + 3 * b^2)
 	float boatTypicalMoI = (m_Mass / 48.0f) * (4.0f * glm::pow(l, 2.0f) + 3.0f * glm::pow(b, 2.0f));
 

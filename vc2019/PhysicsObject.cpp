@@ -4,7 +4,7 @@
 constexpr float DEFAULT_MASS = 1.0f;
 constexpr float DEFAULT_MOI = 1.0f;
 constexpr bool DEFAULT_GRAVITY_MODE = true;
-constexpr vec3 ZERO_VEC = vec3(0.0f);
+static constexpr vec3 ZERO_VEC = vec3(0.0f);
 
 PhysicsObject::PhysicsObject()
 	: PhysicsObject(Transform(), ZERO_VEC, ZERO_VEC) {}
@@ -26,8 +26,8 @@ PhysicsObject::PhysicsObject(const Transform& transform, const vec3 velocity, co
 	: GameObject(transform),
 	m_Velocity(velocity),
 	m_AngularVelocity(angularVelocity),
-	m_Mass(DEFAULT_MASS),
-	m_MomentOfInertia(DEFAULT_MOI),
+	m_Mass(mass),
+	m_MomentOfInertia(momentOfInertia),
 	m_Parent(nullptr),
 	m_TotalAddedForce(0.0f),
 	m_TotalAddedTorque(0.0f),

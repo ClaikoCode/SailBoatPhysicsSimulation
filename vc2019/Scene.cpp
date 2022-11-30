@@ -127,9 +127,9 @@ void Scene::UpdateObjects(const float deltaTime)
 	// Update other behaviours for objects.
 	for (std::shared_ptr<GameObject>& gameObject : m_GameObjects)
 	{
-		CI_LOG_D("Local pos: " << gameObject->m_Transform.GetLocalPosition() <<
-			" | Global pos: " << gameObject->m_Transform.GetGlobalPosition() <<
-			" | Has transform parent: " << (gameObject->m_Transform.m_Parent != nullptr));
+		//CI_LOG_D("Local pos: " << gameObject->m_Transform.GetLocalPosition() <<
+		//	" | Global pos: " << gameObject->m_Transform.GetGlobalPosition() <<
+		//	" | Has transform parent: " << (gameObject->m_Transform.m_Parent != nullptr));
 
 		gameObject->Update();
 	}

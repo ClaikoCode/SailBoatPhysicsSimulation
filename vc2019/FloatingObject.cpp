@@ -1,6 +1,6 @@
 #include "Includes/FloatingObject.h"
 
-constexpr float DEFAULT_BOX_SIZE = 1.0f;
+constexpr float DEFAULT_BOX_SIZE = 0.5f;
 
 // TODO: Remove at "release"
 // ---- DEBUG VARIABLES  ----

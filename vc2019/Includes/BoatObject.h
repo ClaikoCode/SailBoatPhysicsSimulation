@@ -12,9 +12,9 @@ class BoatObject : public PhysicsObject
 private:
 	struct BoatDimensions
 	{
-		float m_BoatWidth;
+		float m_BoatLength;
 		float m_BoatHeight;
-		float m_BoatDepth;
+		float m_BoatBreadth;
 	};
 
 public:
