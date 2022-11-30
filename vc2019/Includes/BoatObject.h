@@ -36,6 +36,8 @@ private:
 	void InitBoatBody();
 	void InitSail();
 	void InitFloaters();
+	void OuterRimFloaterInit(const FloatingObject& baseFloater);
+	void VolumetricFloaterInit();
 
 	void DefaultCopy(const BoatObject& other);
 

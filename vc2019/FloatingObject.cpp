@@ -4,7 +4,7 @@ constexpr float DEFAULT_BOX_SIZE = 0.5f;
 
 // TODO: Remove at "release"
 // ---- DEBUG VARIABLES  ----
-constexpr bool _SCALE_WITH_SIZE = false; // Make rendered object proportional to the box size.
+constexpr bool _SCALE_WITH_SIZE = true; // Make rendered object proportional to the box size.
 
 FloatingObject::FloatingObject()
 	: FloatingObject(DEFAULT_BOX_SIZE) {}

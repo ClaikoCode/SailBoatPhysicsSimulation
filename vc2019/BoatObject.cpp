@@ -3,23 +3,23 @@
 
 #include "cinder/Log.h"
 
-constexpr float DEFAULT_WIDTH = 30.0f;
-constexpr float DEFAULT_DEPTH = 60.0f;
+constexpr float DEFAULT_WIDTH = 50.0f;
+constexpr float DEFAULT_DEPTH = 70.0f;
 constexpr float DEFAULT_HEIGHT = 6.0f;
-constexpr float DEFAULT_MASS = 10.0f;
+constexpr float DEFAULT_MASS = 500.0f;
 
 constexpr vec3 DEFAULT_BOAT_COLOR = vec3(107.0f, 69.0f, 54.0f) / 255.0f;
 
 // ---- DEBUG VARIABLES ----
 constexpr float _MoI_SCALING = 2.0f;
-constexpr float _MASS_SCALING = 1.5f;
+constexpr float _MASS_SCALING = 5.0f;
 
 BoatObject::BoatObject()
 	: BoatObject(DEFAULT_WIDTH, DEFAULT_DEPTH) {}
 
 
 BoatObject::BoatObject(const float width, const float depth)
-	: PhysicsObject(_MASS_SCALING * DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated in constructor later.
+	: PhysicsObject(_MASS_SCALING * DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated last in constructor.
 	m_Floaters(),
 	m_WaveManager(nullptr),
 	m_SailObject(),
@@ -118,28 +118,72 @@ void BoatObject::InitSail()
 
 void BoatObject::InitFloaters()
 {
-	const float floaterSize = 0.4f;
+	const float floaterSize = 0.6f;
 	FloatingObject floater = FloatingObject(floaterSize);
 
 	floater.AttachToObject(*this);
 	floater.m_IsDrawable = true;
 
-	float halfBoatLength = m_BoatDimensions.m_BoatLength / 2.0f;
-	float halfBoatBreadth = m_BoatDimensions.m_BoatBreadth / 2.0f;
+	//VolumetricFloaterInit();
+
+	OuterRimFloaterInit(floater);
+}
+
+void BoatObject::OuterRimFloaterInit(const FloatingObject& baseFloater)
+{
+	static const uint32_t nSideFloaters = 12;
+	static const uint32_t nFrontBackFloaters = 12;
+	const uint32_t nHeightLevels = 7;
+
+	const float sideDelta = m_BoatDimensions.m_BoatLength / (float)nSideFloaters;
+	const float frontDelta = m_BoatDimensions.m_BoatBreadth / (float)nFrontBackFloaters;
+	const float heightDelta = m_BoatDimensions.m_BoatHeight / (float)nHeightLevels;
+
+	const float halfBoatLength = m_BoatDimensions.m_BoatLength / 2.0f;
+	const float halfBoatBreadth = m_BoatDimensions.m_BoatBreadth / 2.0f;
+	const float halfBoatHeight = m_BoatDimensions.m_BoatHeight / 2.0f;
+
+	const vec3 sideDeltaVec = vec3(-sideDelta, 0.0f, 0.0f);
+	const vec3 frontDeltaVec = vec3(0.0f, 0.0f, -frontDelta);
+	const vec3 heightDeltaVec = vec3(0.0f, -heightDelta, 0.0f);
+
+	const vec3 topRightBoatQuadrant = vec3(halfBoatLength, 0.0f, halfBoatBreadth);
+	const vec3 bottomOfBoat = vec3(0.0f, halfBoatHeight, 0.0f);
+
+
+	for (int heightLevel = 0; heightLevel < nHeightLevels + 1; heightLevel++)
+	{
+		const vec3 heightOffset = bottomOfBoat + heightDeltaVec * (float)heightLevel;
+
+		for (int i = 0; i < nSideFloaters; i++)
+		{
+			vec3 floaterPos = topRightBoatQuadrant + sideDeltaVec * (float)i + heightOffset;
+			AddFloaterPair(baseFloater, floaterPos);
+		}
+
+		// Start on one due to floaters already placed in top corner
+		for (int i = 1; i < nFrontBackFloaters + 1; i++)
+		{
+			vec3 floaterPos = topRightBoatQuadrant + frontDeltaVec * (float)i + heightOffset;
+			AddFloaterPair(baseFloater, floaterPos);
+		}
+	}
+}
+
+void BoatObject::VolumetricFloaterInit()
+{
+	const float floaterSize = m_BoatDimensions.m_BoatHeight;
+	FloatingObject floater = FloatingObject(floaterSize);
 	
-	vec3 floaterPos = vec3(halfBoatLength, 0.0f, halfBoatBreadth);
-	AddFloaterPair(floater, floaterPos);
-
-	floaterPos.x = -floaterPos.x;
-	AddFloaterPair(floater, floaterPos);
-
-	floaterPos = vec3(0.0f, 0.0f, halfBoatBreadth);
-	AddFloaterPair(floater, floaterPos);
-
-	floaterPos = vec3(halfBoatLength, 0.0f, 0.0f);
-	AddFloaterPair(floater, floaterPos);
-
-
+	int counter = 0;
+	float decimalRemainder = FLT_MAX;
+	const float decimalLimit = 0.05f;
+	while (decimalRemainder > 0.05f)
+	{
+		float divResult = m_BoatDimensions.m_BoatBreadth / (floaterSize * glm::pow(2.0f, counter));
+		decimalRemainder = divResult - glm::floor(divResult);
+		counter++;
+	}
 }
 
 void BoatObject::DefaultCopy(const BoatObject& other)
@@ -158,8 +202,6 @@ void BoatObject::DefaultCopy(const BoatObject& other)
 		floater.AttachToObject(*this);
 	}
 }
-
-
 
 float BoatObject::CalculateMomentOfInertia(const float l, const float b) const
 {
