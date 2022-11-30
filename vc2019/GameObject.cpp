@@ -1,24 +1,34 @@
 #include "Includes/GameObject.h"
 
-constexpr vec3 _DEFAULT_MODEL_COLOR = vec3(1.0f);
+
+#define _GET_DEFAULT_SHADER() gl::getStockShader(gl::ShaderDef().lambert().color())
+constexpr vec3 DEFAULT_MODEL_COLOR = vec3(1.0f);
+constexpr bool DEFAULT_STATIC_STATE = false;
+constexpr bool DEFAULT_DRAWABLE_STATE = true;
 
 GameObject::GameObject()
-{
-	DefaultInit();
-}
+	: m_ShaderRef(_GET_DEFAULT_SHADER()),
+	m_Mesh(), 
+	m_TriMesh(),
+	m_Transform(), 
+	m_IsStatic(DEFAULT_STATIC_STATE),
+	m_IsDrawable(DEFAULT_DRAWABLE_STATE),
+	m_MeshColor(DEFAULT_MODEL_COLOR) {}
 
 GameObject::GameObject(const Transform transform)
-{
-	DefaultInit();
-
-	m_Transform = transform;
-}
+	: m_ShaderRef(_GET_DEFAULT_SHADER()),
+	m_Mesh(),
+	m_TriMesh(),
+	m_Transform(transform),
+	m_IsStatic(DEFAULT_STATIC_STATE),
+	m_IsDrawable(DEFAULT_DRAWABLE_STATE),
+	m_MeshColor(DEFAULT_MODEL_COLOR) {}
 
 void GameObject::SetMesh(const geom::Source& geometrySource)
 {
 	gl::VboMesh::create(geometrySource);
 	m_TriMesh = TriMesh::create(geometrySource, TriMesh::Format().positions().normals().texCoords().colors(3));
-	std::vector<Color> colors = std::vector<Color>(m_TriMesh->getNumVertices(), Color(CM_RGB, _DEFAULT_MODEL_COLOR));
+	std::vector<Color> colors = std::vector<Color>(m_TriMesh->getNumVertices(), Color(CM_RGB, DEFAULT_MODEL_COLOR));
 	m_TriMesh->appendColors(colors.data(), colors.size());
 
 	//m_TriMesh = TriMesh::create(geometrySource);
@@ -39,7 +49,7 @@ void GameObject::UpdateBatchMesh()
 
 void GameObject::DefaultInit()
 {
-	m_ShaderRef = gl::getStockShader(gl::ShaderDef().lambert().color());
+	m_ShaderRef = _GET_DEFAULT_SHADER();
 	m_Mesh = {};
 	m_TriMesh = {};
 
