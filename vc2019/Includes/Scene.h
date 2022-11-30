@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <memory>
 
@@ -7,11 +6,9 @@
 
 #include "cinder/CameraUi.h"
 #include "cinder/TriMesh.h"
-#include "cinder/Rand.h"
-#include "cinder/Timer.h"
-#include "cinder/Log.h"
 
 #include "Includes/PhysicsObject.h"
+#include "Includes/WaveManager.h"
 
 
 class Scene
@@ -33,6 +30,7 @@ private:
 
 	void SetupCamera();
 	void SetupObjects();
+	void SetupWater();
 
 	void UpdateObjects(const float deltaTime);
 
@@ -48,6 +46,8 @@ private:
 
 	std::vector<std::shared_ptr<PhysicsObject>> m_PhysicsObjects;
 	std::vector<std::shared_ptr<GameObject>> m_GameObjects;
+
+	WaveManager m_WaveManager;
 };
 
 

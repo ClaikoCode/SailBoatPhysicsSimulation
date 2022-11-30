@@ -1,8 +1,16 @@
 #include "Includes/Scene.h"
 
-#include "Includes/ValueRandomizationVolume.h"
+#include "cinder/Rand.h"
+#include "cinder/Timer.h"
+#include "cinder/Log.h"
 
-constexpr int MAX_OBJECTS = 2;
+#include "Includes/ValueRandomizationVolume.h"
+#include "Includes/FloatingObject.h"
+#include "Includes/BoatObject.h"
+#include "Includes/WaveObject.h"
+
+
+#include "Includes/NaturalConstants.h"
 
 Scene::Scene()
 {
@@ -25,6 +33,7 @@ void Scene::SetupScene()
 {
 	SetupCamera();
 	SetupObjects();
+	SetupWater();
 }
 
 
@@ -35,8 +44,10 @@ void Scene::UpdateScene()
 
 	//CI_LOG_D("Frame: " << getElapsedFrames());
 	CI_LOG_D("Time elapsed: " << timeDelta);
-	//CI_LOG_D("Frame rate: " << getFrameRate());
 
+	m_WaveManager.StepTime();
+	m_WaveManager.CalculateWaveVerticies();
+	
 	UpdateObjects(timeDelta);
 }
 
@@ -72,7 +83,7 @@ void Scene::SetupCamera()
 
 	float verticalFov = 40.0f;
 	float nearPlane = 0.01f;
-	float farPlane = 2000.0f;
+	float farPlane = 3000.0f;
 	m_Camera.setPerspective(verticalFov, getWindowAspectRatio(), nearPlane, farPlane);
 
 	m_CameraUI = CameraUi(&m_Camera, getWindow());
@@ -91,51 +102,50 @@ void Scene::AddObject(T& object, std::vector<std::shared_ptr<T>>& objectVector)
 
 void Scene::SetupObjects()
 {
-	const float boxVal = 5.0f;
-	Randomization::ValueRandomizationVolume VRV = Randomization::ValueRandomizationVolume(vec3(boxVal), vec3(0.0f, boxVal + 2.0f, 0.0f));
+	const float boxVal = 0.0f;
+	Randomization::ValueRandomizationVolume VRV = Randomization::ValueRandomizationVolume(vec3(boxVal), vec3(0.0f, boxVal + 15.0f, 0.0f));
 
-	for (int i = 0; i < MAX_OBJECTS; i++)
-	{
-		PhysicsObject physicsObject = PhysicsObject();
-		physicsObject.m_Transform.SetLocalPosition(VRV.GetValue());
-		//physicsObject.m_Transform.SetLocalRotation(VRV.GetValue());
-		physicsObject.m_Transform.UpdateLocalScale(3.0f);
-		physicsObject.SetMesh(geom::Cube());
+	WaveObject waveObject = WaveObject();
+	m_GameObjects.push_back(std::make_shared<WaveObject>(waveObject));
 
-		physicsObject.m_Mass = (float)physicsObject.m_Transform.GetLocalPosition().length();
-		//physicsObject.m_AngularVelocity = VRV.GetValue();
+	m_WaveManager = WaveManager();
+	m_WaveManager.m_WaterObject = m_GameObjects.back().get();
+	
+	// Setup test objects
+	BoatObject boatObject = BoatObject();
+	boatObject.AttachWaveManager(m_WaveManager);
+	m_PhysicsObjects.push_back(std::make_shared<BoatObject>(boatObject));
+	m_GameObjects.push_back(m_PhysicsObjects.back());
+}
 
-		if (i == 1)
-		{
-			m_PhysicsObjects.back()->m_AngularVelocity = vec3(2.0f, 0.0f, 0.0f);
-			m_PhysicsObjects.back()->m_Velocity = vec3(3.0f, 0.0f, 0.0f);
-			physicsObject.m_AngularVelocity = vec3(1.0f, 0.0f, 0.0f);
-			physicsObject.m_Transform.m_Parent = &(m_PhysicsObjects.back()->m_Transform);
-		}
-
-		AddObject<PhysicsObject>(physicsObject, m_PhysicsObjects);
-	}
-
-	PhysicsObject physicsObject = PhysicsObject();
-	physicsObject.SetMesh(geom::Plane());
-	physicsObject.m_IsStatic = true;
-	physicsObject.m_Transform.UpdateLocalScale(50.0f);
-	AddObject<PhysicsObject>(physicsObject, m_PhysicsObjects);
+void Scene::SetupWater()
+{
+	// TODO: Uncomment wavemanager.
+	// m_WaveManager = WaveManager();
 }
 
 
 void Scene::UpdateObjects(const float deltaTime)
 {
-	// Update physics of objects.
+	// Update all forces for physics objects.
 	for (std::shared_ptr<PhysicsObject>& physicsObject : m_PhysicsObjects)
 	{
-		physicsObject->AddForce(vec3(0.0f));
+		
+	}
+
+	// Update movement for all physics objects. Should always be done after all forces in the world are properly calculated.
+	for (std::shared_ptr<PhysicsObject>& physicsObject : m_PhysicsObjects)
+	{
 		physicsObject->PhysicsUpdate(deltaTime);
 	}
 
 	// Update other behaviours for objects.
 	for (std::shared_ptr<GameObject>& gameObject : m_GameObjects)
 	{
+		CI_LOG_D("Local pos: " << gameObject->m_Transform.GetLocalPosition() <<
+			" | Global pos: " << gameObject->m_Transform.GetGlobalPosition() <<
+			" | Has transform parent: " << (gameObject->m_Transform.m_Parent != nullptr));
+
 		gameObject->Update();
 	}
 }

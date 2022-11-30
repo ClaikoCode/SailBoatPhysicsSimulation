@@ -104,6 +104,12 @@
   <ItemGroup>
     <ClCompile Include="..\src\CinderPhysicsProjectApp.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="FloatingObject.cpp" />
+    <ClCompile Include="BoatObject.cpp" />
+    <ClCompile Include="WindManager.cpp" />
+    <ClCompile Include="SailObject.cpp" />
+    <ClCompile Include="WaveObject.cpp" />
+    <ClCompile Include="WaveManager.cpp" />
     <ClCompile Include="ValueRandomizationVolume.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -111,14 +117,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="Includes\BoatObject.h" />
     <ClInclude Include="Includes\CinderEssentials.h" />
     <ClInclude Include="Includes\FloatingObject.h" />
     <ClInclude Include="Includes\GameObject.h" />
-    <ClInclude Include="Includes\PhysicsConstants.h" />
+    <ClInclude Include="Includes\NaturalConstants.h" />
+    <ClInclude Include="Includes\SailObject.h" />
     <ClInclude Include="Includes\ValueRandomizationVolume.h" />
     <ClInclude Include="Includes\PhysicsObject.h" />
     <ClInclude Include="Includes\Scene.h" />
     <ClInclude Include="Includes\Transform.h" />
+    <ClInclude Include="Includes\WaveManager.h" />
+    <ClInclude Include="Includes\WaveObject.h" />
+    <ClInclude Include="Includes\WindManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

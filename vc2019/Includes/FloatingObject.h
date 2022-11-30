@@ -1,19 +1,29 @@
 #pragma once
 
+#include "Includes/GameObject.h"
 #include "Includes/PhysicsObject.h"
 
-class FloatingObject : public PhysicsObject
+// A floater is assumed to be a box of a certain width. 
+class FloatingObject : public GameObject
 {
 public:
 	FloatingObject();
+	FloatingObject(const float boxSize);
 
 	~FloatingObject() = default;
 
 	virtual void Draw() override;
-	virtual void PhysicsUpdate(const float deltaTime) override;
 	virtual void Update() override;
 
-private:
-	void SetMesh(const geom::Source& geometrySource);
+	float CalculateSubmergedVolume(const float globalSeaHeight) const;
 
+	void AttachToObject(const PhysicsObject& object);
+
+private:
+	void DefaultInit();
+	float GetTotalVolume() const;
+
+private:
+	float m_BoxSize;
+	const PhysicsObject* m_AttachedObject;
 };
