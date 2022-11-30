@@ -14,8 +14,5 @@ public:
 	void Update() override {};
 
 private:
-	void DefaultInit();
-
-
-
+	void InitWaterPlane(const float waterSize, const uint32_t subdivisions);
 };

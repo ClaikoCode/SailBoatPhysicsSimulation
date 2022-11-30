@@ -1,59 +1,66 @@
 #include "Includes/PhysicsObject.h"
 #include "Includes/NaturalConstants.h"
 
+constexpr float DEFAULT_MASS = 1.0f;
+constexpr float DEFAULT_MoI = 1.0f;
+constexpr bool DEFAULT_GRAVITY_MODE = true;
 
-
-PhysicsObject::PhysicsObject() 
-	: GameObject()
-{
-	DefaultInit();
-}
+PhysicsObject::PhysicsObject()
+	: m_Velocity(0.0f),
+	m_AngularVelocity(0.0f),
+	m_Mass(DEFAULT_MASS),
+	m_MomentOfInertia(DEFAULT_MoI),
+	m_Parent(nullptr),
+	m_TotalAddedForce(0.0f),
+	m_TotalAddedTorque(0.0f),
+	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
 PhysicsObject::PhysicsObject(const Transform transform)	
-	: GameObject(transform)
-{
-	DefaultInit();
-}
+	: GameObject(transform),
+	m_Velocity(0.0f),
+	m_AngularVelocity(0.0f),
+	m_Mass(DEFAULT_MASS),
+	m_MomentOfInertia(DEFAULT_MoI),
+	m_Parent(nullptr),
+	m_TotalAddedForce(0.0f),
+	m_TotalAddedTorque(0.0f),
+	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
-PhysicsObject::PhysicsObject(const vec3 velocity, const vec3 angularVelocity) 
-	: GameObject()
-{
-	DefaultInit();
-
-	m_Velocity = velocity;
-	m_AngularVelocity = angularVelocity;
-}
+PhysicsObject::PhysicsObject(const vec3 velocity, const vec3 angularVelocity)
+	: m_Velocity(velocity),
+	m_AngularVelocity(angularVelocity),
+	m_Mass(DEFAULT_MASS),
+	m_MomentOfInertia(DEFAULT_MoI),
+	m_Parent(nullptr),
+	m_TotalAddedForce(0.0f),
+	m_TotalAddedTorque(0.0f),
+	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
 PhysicsObject::PhysicsObject(const Transform transform, const vec3 velocity, const vec3 angularVelocity) 
-	: GameObject(transform)
-{
-	DefaultInit();
+	: GameObject(transform),
+	m_Velocity(velocity),
+	m_AngularVelocity(angularVelocity),
+	m_Mass(DEFAULT_MASS),
+	m_MomentOfInertia(DEFAULT_MoI),
+	m_Parent(nullptr),
+	m_TotalAddedForce(0.0f),
+	m_TotalAddedTorque(0.0f),
+	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
-	m_Velocity = velocity;
-	m_AngularVelocity = angularVelocity;
-}
-
-PhysicsObject::PhysicsObject(
-	const Transform transform, 
-	const vec3 velocity, 
-	const vec3 angularVelocity, 
-	const float mass, 
-	const float momentOfInertia 
-) 
-	: GameObject(transform)
-{
-	DefaultInit();
-
-	m_Velocity = velocity;
-	m_AngularVelocity = angularVelocity;
-	m_Mass = mass;
-	m_MomentOfInertia = momentOfInertia;
-}
+PhysicsObject::PhysicsObject(const Transform transform, const vec3 velocity, const vec3 angularVelocity, const float mass, const float momentOfInertia ) 
+	: GameObject(transform),
+	m_Velocity(velocity),
+	m_AngularVelocity(angularVelocity),
+	m_Mass(mass),
+	m_MomentOfInertia(momentOfInertia),
+	m_Parent(nullptr),
+	m_TotalAddedForce(0.0f),
+	m_TotalAddedTorque(0.0f),
+	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
 PhysicsObject::PhysicsObject(const float mass, const float momentOfInertia) 
 	: GameObject()
 {
-	DefaultInit();
 
 	m_Mass = mass;
 	m_MomentOfInertia = momentOfInertia;
@@ -129,18 +136,4 @@ void PhysicsObject::DefaultPhysicsUpdate(const float deltaTime)
 	}
 
 	ResetTotalForceAndTorque();
-}
-
-void PhysicsObject::DefaultInit()
-{
-	m_Velocity			= vec3(0.0f);
-	m_AngularVelocity	= vec3(0.0f);
-	m_TotalAddedForce	= vec3(0.0f);
-	m_TotalAddedTorque	= vec3(0.0f);
-
-	m_Mass = 1.0f;
-	m_MomentOfInertia = 1.0f;
-
-	m_Parent = nullptr;
-	m_GravityEnabled = true;
 }

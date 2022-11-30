@@ -109,7 +109,7 @@ void Scene::SetupObjects()
 	m_GameObjects.push_back(std::make_shared<WaveObject>(waveObject));
 
 	m_WaveManager = WaveManager();
-	m_WaveManager.m_WaterObject = m_GameObjects.back().get();
+	m_WaveManager.m_WaveObject = dynamic_cast<WaveObject*>(m_GameObjects.back().get());
 	
 	// Setup test objects
 	BoatObject boatObject = BoatObject();

@@ -42,10 +42,6 @@ protected:
 
 	void ApplyDrag();
 
-
-private:
-	void DefaultInit();
-
 public:
 	vec3 m_Velocity;
 	// Velocity of euler angles in radians / second.

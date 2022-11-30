@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Includes/GameObject.h"
+#include "Includes/WaveObject.h"
 
 class WaveManager
 {
@@ -15,10 +15,7 @@ public:
 private:
 	void DefaultInit();
 
-	
-	
-
 public:
-	GameObject* m_WaterObject;
+	WaveObject* m_WaveObject;
 	float m_TimePassed;
 };

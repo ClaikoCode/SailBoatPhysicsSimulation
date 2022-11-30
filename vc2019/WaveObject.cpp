@@ -1,23 +1,17 @@
 #include "Includes/WaveObject.h"
 
 constexpr vec3 DEFAULT_WATER_COLOR = vec3(0.0f, 84.0f, 147.0f) / 255.0f;
-constexpr float WATER_SIZE = 500.0f;
-constexpr uint32_t SUB_DIVISION = 10;
+constexpr float DEFAULT_WATER_SIZE = 500.0f;
+constexpr uint32_t DEFAULT_SUB_DIVISION = 10;
 
 WaveObject::WaveObject() 
-	: GameObject()
 {
-	DefaultInit();
+	InitWaterPlane(DEFAULT_WATER_SIZE, DEFAULT_SUB_DIVISION);
 }
 
 WaveObject::WaveObject(const float waterSize)
 {
-	geom::Plane planeSource = geom::Plane();
-	planeSource.size(vec2(waterSize));
-	planeSource.subdivisions(ivec2(SUB_DIVISION));
-	SetMesh(planeSource);
-
-	m_MeshColor = DEFAULT_WATER_COLOR;
+	InitWaterPlane(waterSize, DEFAULT_SUB_DIVISION);
 }
 
 void WaveObject::Draw()
@@ -25,12 +19,11 @@ void WaveObject::Draw()
 	DefaultDraw();
 }
 
-void WaveObject::DefaultInit()
+void WaveObject::InitWaterPlane(const float waterSize, const uint32_t subdivisions)
 {
 	geom::Plane planeSource = geom::Plane();
-	planeSource.size(vec2(WATER_SIZE));
-	planeSource.subdivisions(ivec2(SUB_DIVISION));
+	planeSource.size(vec2(waterSize));
+	planeSource.subdivisions(ivec2(subdivisions));
 	SetMesh(planeSource);
-
-	m_MeshColor = DEFAULT_WATER_COLOR;
+	SetMeshColor(DEFAULT_WATER_COLOR);
 }

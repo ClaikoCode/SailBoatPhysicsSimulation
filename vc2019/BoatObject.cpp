@@ -15,7 +15,6 @@ constexpr float _MoI_SCALING = 20.0f;
 constexpr float _MASS_SCALING = 2.5f;
 
 BoatObject::BoatObject()
-	: PhysicsObject()
 {
 	DefaultInit();
 }
@@ -89,7 +88,8 @@ void BoatObject::DetachWaveManager()
 
 void BoatObject::DefaultInit()
 {
-	SetMesh(geom::Cube().size( vec3(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_DEPTH) ));
+	geom::Cube boatBody = geom::Cube().size(vec3(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_DEPTH));
+	SetMesh(boatBody);
 	m_BoatDimensions = BoatDimensions({ DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_DEPTH });
 
 	m_Mass = _MASS_SCALING * DEFAULT_MASS;
@@ -98,7 +98,7 @@ void BoatObject::DefaultInit()
 	InitSail(); // Has to happen after defining boat dimensions.
 
 	InitFloaters();
-	m_MeshColor = DEFAULT_BOAT_COLOR;
+	SetMeshColor(DEFAULT_BOAT_COLOR);
 
 	m_WaveManager = nullptr;
 }

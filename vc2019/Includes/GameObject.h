@@ -15,24 +15,23 @@ public:
 	virtual void Update() = 0;
 
 	void SetMesh(const geom::Source& geometrySource);
+	void SetMeshColor(const vec3 rgbColor);
 	TriMeshRef GetTriMesh() const;
 	void UpdateBatchMesh();
 
 protected:
 	void DefaultDraw();
-
-private:
-	void DefaultInit();
 	
 protected:
 	gl::GlslProgRef m_ShaderRef;
 	gl::BatchRef m_Mesh;
 	TriMeshRef m_TriMesh;
 
+	// RGB Mesh color.
+	vec3 m_MeshColor;
+
 public:
 	Transform m_Transform;
 	bool m_IsStatic;
 	bool m_IsDrawable;
-
-	vec3 m_MeshColor;
 };

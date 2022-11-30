@@ -9,18 +9,19 @@ constexpr float DEFAULT_TIME_STEP = 0.5f;
 constexpr float DEFAULT_WAVE_LENGTH = 75.0f;
 
 WaveManager::WaveManager()
+	: m_TimePassed(0.0f)
 {
 	DefaultInit();
 }
 
 void WaveManager::CalculateWaveVerticies()
 {
-	if (m_WaterObject == nullptr)
+	if (m_WaveObject == nullptr)
 		return;
 
 	static WindManager windManager = WindManager();
 
-	TriMeshRef triMesh = m_WaterObject->GetTriMesh();
+	TriMeshRef triMesh = m_WaveObject->GetTriMesh();
 	size_t numVertecies = triMesh->getNumVertices();
 	vec3* vertexPositions = triMesh->getPositions<3>();
 	
@@ -35,12 +36,12 @@ void WaveManager::CalculateWaveVerticies()
 	}
 
 	triMesh->recalculateNormals();
-	m_WaterObject->UpdateBatchMesh();
+	m_WaveObject->UpdateBatchMesh();
 }
 
 void WaveManager::DefaultInit()
 {
-	m_WaterObject = nullptr;
+	m_WaveObject = nullptr;
 	m_TimePassed = 0.0f;
 }
 
