@@ -49,21 +49,18 @@ cinder::mat4 Transform::GetUnscaledGlobalTransform() const
 
 // ----- Local transform functions -----
 
-cinder::vec3 Transform::GetLocalPosition() const
-{ return m_Position; }
+cinder::vec3 Transform::GetLocalPosition() const { return m_Position; }
 void Transform::SetLocalPosition(const vec3& newPos) { m_Position = newPos; }
 void Transform::SetLocalPosition(const float x, const float y, const float z) { m_Position = vec3(x, y, z); }
 void Transform::UpdateLocalPosition(const vec3 posDelta) { m_Position += posDelta; }
 
-cinder::vec3 Transform::GetLocalScale() const
-{ return m_Scale; }
+cinder::vec3 Transform::GetLocalScale() const { return m_Scale; }
 void Transform::SetScale(const vec3 newScale) { m_Scale = newScale; }
 void Transform::SetScale(const float scaleFactor) { m_Scale = vec3(scaleFactor); }
 void Transform::UpdateLocalScale(const vec3 scaleDelta) { m_Scale += scaleDelta; }
 void Transform::UpdateLocalScale(const float multiplier) { m_Scale *= multiplier; }
 
-cinder::vec3 Transform::GetLocalRotation() const
-{ return m_Rotation; }
+cinder::vec3 Transform::GetLocalRotation() const { return m_Rotation; }
 void Transform::SetLocalRotation(const vec3 newRot) { m_Rotation = newRot; }
 void Transform::UpdateLocalRotation(const vec3 rotDelta) { m_Rotation += rotDelta; }
 

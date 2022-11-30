@@ -19,10 +19,12 @@ private:
 
 public:
 	BoatObject();
-	BoatObject(const BoatObject& other);
-	BoatObject& operator=(const BoatObject& other);
+	BoatObject(const float width, const float depth);
 	~BoatObject() = default;
 
+	BoatObject(const BoatObject& other);
+	BoatObject& operator=(const BoatObject& other);
+	
 	virtual void Draw() override;
 	virtual void Update() override;
 	virtual void PhysicsUpdate(const float deltaTime) override;
@@ -31,17 +33,16 @@ public:
 	void DetachWaveManager();
 
 private:
-	void DefaultInit();
+	void InitBoatBody();
 	void InitSail();
 	void InitFloaters();
 
 	void DefaultCopy(const BoatObject& other);
 
-	void AddFloaterPair(const FloatingObject& floater, const vec3& position);
-
-	// Scales with mass.
 	float CalculateMomentOfInertia(const float l, const float b) const;
-	vec3 GetRelativeFloaterPos(const FloatingObject& floater) const;
+
+	void AddFloaterPair(const FloatingObject& floater, const vec3& position);
+	vec3 GetFloaterPosRelativeBoat(const FloatingObject& floater) const;
 
 private:
 	std::vector<FloatingObject> m_Floaters;

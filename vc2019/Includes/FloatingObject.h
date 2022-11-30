@@ -20,7 +20,7 @@ public:
 	void AttachToObject(const PhysicsObject& object);
 
 private:
-	void DefaultInit();
+	void InitFloaterMesh();
 	float GetTotalVolume() const;
 
 private:

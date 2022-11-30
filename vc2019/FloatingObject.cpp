@@ -1,24 +1,18 @@
 #include "Includes/FloatingObject.h"
 
+constexpr float DEFAULT_BOX_SIZE = 1.0f;
+
 // TODO: Remove at "release"
 // ---- DEBUG VARIABLES  ----
 constexpr bool _SCALE_WITH_SIZE = false; // Make rendered object proportional to the box size.
 
 FloatingObject::FloatingObject()
-	: GameObject()
-{
-	DefaultInit();
-}
+	: FloatingObject(DEFAULT_BOX_SIZE) {}
 
 FloatingObject::FloatingObject(const float boxSize)
-	: GameObject()
+	: m_BoxSize(boxSize), m_AttachedObject(nullptr)
 {
-	DefaultInit();
-
-	m_BoxSize = boxSize;
-
-	if(_SCALE_WITH_SIZE)
-		m_Transform.UpdateLocalScale(m_BoxSize); 
+	InitFloaterMesh();	
 }
 
 void FloatingObject::Draw()
@@ -26,10 +20,7 @@ void FloatingObject::Draw()
 	DefaultDraw();
 }
 
-void FloatingObject::Update()
-{
-
-}
+void FloatingObject::Update() {}
 
 float FloatingObject::CalculateSubmergedVolume(const float globalSeaHeight) const
 {
@@ -55,11 +46,13 @@ void FloatingObject::AttachToObject(const PhysicsObject& object)
 	m_AttachedObject = &object;
 }
 
-void FloatingObject::DefaultInit()
+void FloatingObject::InitFloaterMesh()
 {
-	m_BoxSize = 1.0f;
-	SetMesh(geom::Cube());
-	m_AttachedObject = nullptr;
+	geom::Cube floaterMesh = geom::Cube();
+	if (_SCALE_WITH_SIZE)
+		floaterMesh.size(vec3(m_BoxSize));
+
+	SetMesh(floaterMesh);
 }
 
 float FloatingObject::GetTotalVolume() const
