@@ -37,6 +37,8 @@ void GameObject::SetMesh(const geom::Source& geometrySource)
 
 void GameObject::SetMeshColor(const vec3 rgbColor)
 {
+	m_MeshColor = rgbColor;
+
 	Colorf* colors = m_TriMesh->getColors<3>();
 	const size_t numVerticies = m_TriMesh->getNumVertices();
 	const Colorf newColor = Color(CM_RGB, rgbColor);
@@ -49,9 +51,9 @@ void GameObject::SetMeshColor(const vec3 rgbColor)
 	UpdateBatchMesh();
 }
 
-cinder::TriMeshRef GameObject::GetTriMesh() const
-{
-	return m_TriMesh;
+cinder::TriMeshRef GameObject::GetTriMesh() const 
+{ 
+	return m_TriMesh; 
 }
 
 void GameObject::UpdateBatchMesh()

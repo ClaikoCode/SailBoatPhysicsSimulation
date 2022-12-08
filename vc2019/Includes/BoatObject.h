@@ -29,7 +29,7 @@ public:
 	virtual void Update() override;
 	virtual void PhysicsUpdate(const float deltaTime) override;
 
-	void AttachWaveManager(WaveManager& waveManager);
+	void AttachWaveManager(const WaveManager& waveManager);
 	void DetachWaveManager();
 
 private:

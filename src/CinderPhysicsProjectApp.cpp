@@ -48,7 +48,7 @@ void CinderPhysicsProjectApp::update()
 
 void CinderPhysicsProjectApp::draw()
 {
-	gl::clear( Color( 0, 0, 0 ) );
+	gl::clear(Color(0, 0, 0));
 
 	m_Scene.DrawScene();
 }

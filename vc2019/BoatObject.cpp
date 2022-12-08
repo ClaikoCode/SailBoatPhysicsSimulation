@@ -10,6 +10,9 @@ constexpr float DEFAULT_MASS = 500.0f;
 
 constexpr vec3 DEFAULT_BOAT_COLOR = vec3(107.0f, 69.0f, 54.0f) / 255.0f;
 
+// TODO: Remove when done
+#include "Includes/WindManager.h"
+
 // ---- DEBUG VARIABLES ----
 constexpr float _MoI_SCALING = 2.0f;
 constexpr float _MASS_SCALING = 5.0f;
@@ -66,6 +69,14 @@ void BoatObject::Update()
 
 void BoatObject::PhysicsUpdate(const float deltaTime)
 {
+	static float totalTime = 0.0f;
+	totalTime += deltaTime;
+	static WindManager windManager = WindManager();
+	vec3 windDir = windManager.GetWindDirAtPos(m_Transform.GetGlobalPosition(), totalTime);
+	//this->AddForce(windDir * 10000.0f);
+
+
+	// Calculate the force applied from each floater thats attached to the boat.
 	for (const FloatingObject& floater : m_Floaters)
 	{
 		float globalHeightLevel = 0.0f;
@@ -85,7 +96,7 @@ void BoatObject::PhysicsUpdate(const float deltaTime)
 	DefaultPhysicsUpdate(deltaTime);
 }
 
-void BoatObject::AttachWaveManager(WaveManager& waveManager)
+void BoatObject::AttachWaveManager(const WaveManager& waveManager)
 {
 	m_WaveManager = &waveManager;
 	
@@ -102,7 +113,7 @@ void BoatObject::DetachWaveManager()
 void BoatObject::InitBoatBody()
 {
 	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatBreadth);
-	geom::Cube boatBody = geom::Cube().size(sizeVector);
+	geom::Cube boatBody = geom::Cube().size(sizeVector).subdivisions(10);
 	SetMesh(boatBody);
 	SetMeshColor(DEFAULT_BOAT_COLOR);
 }
@@ -131,8 +142,8 @@ void BoatObject::InitFloaters()
 
 void BoatObject::OuterRimFloaterInit(const FloatingObject& baseFloater)
 {
-	static const uint32_t nSideFloaters = 12;
-	static const uint32_t nFrontBackFloaters = 12;
+	const uint32_t nSideFloaters = 12;
+	const uint32_t nFrontBackFloaters = 12;
 	const uint32_t nHeightLevels = 7;
 
 	const float sideDelta = m_BoatDimensions.m_BoatLength / (float)nSideFloaters;
@@ -174,7 +185,7 @@ void BoatObject::VolumetricFloaterInit()
 {
 	const float floaterSize = m_BoatDimensions.m_BoatHeight;
 	FloatingObject floater = FloatingObject(floaterSize);
-	
+
 	int counter = 0;
 	float decimalRemainder = FLT_MAX;
 	const float decimalLimit = 0.05f;

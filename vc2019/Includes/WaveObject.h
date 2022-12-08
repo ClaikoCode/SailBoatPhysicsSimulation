@@ -6,13 +6,17 @@ class WaveObject : public GameObject
 {
 public:
 	WaveObject();
-	// TODO: Make this more efficient as to not duplicate water mesh creation
 	WaveObject(const float waterSize);
 	~WaveObject() = default;
 
 	void Draw() override;
 	void Update() override {};
 
+	float GetWaterSize() const;
+
 private:
 	void InitWaterPlane(const float waterSize, const uint32_t subdivisions);
+
+private:
+	float m_WaterSize;
 };

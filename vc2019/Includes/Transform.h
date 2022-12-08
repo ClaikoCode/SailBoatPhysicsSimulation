@@ -31,8 +31,11 @@ public:
 	// Multiples current scale uniformly with multiplier.
 	void UpdateLocalScale(const float multiplier);
 
+	// Gets X Y Z euler angles in radians.
 	vec3 GetLocalRotation() const;
+	// Sets rotation as XYZ euler angles in radians.
 	void SetLocalRotation(const vec3 newRot);
+	// Adds rotation vector as XYZ euler angles in radians.
 	void UpdateLocalRotation(const vec3 rotDelta);
 
 

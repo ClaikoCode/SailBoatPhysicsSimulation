@@ -25,5 +25,4 @@ private:
 
 private:
 	float m_BoxSize;
-	const PhysicsObject* m_AttachedObject;
 };

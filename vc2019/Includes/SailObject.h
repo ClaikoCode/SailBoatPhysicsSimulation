@@ -16,10 +16,16 @@ public:
 
 	float GetSailHeight() const;
 	float GetSailWidth() const;
+	
+	vec3 GetSailDirection() const;
+
+private:
+	void InitSailMesh();
 
 private:
 	// Sail angle in radians around the y-axis.
 	float m_SailAngle;
+
 	float m_SailHeight;
 	float m_SailWidth;
 };

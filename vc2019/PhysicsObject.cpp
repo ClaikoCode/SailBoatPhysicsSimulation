@@ -9,7 +9,7 @@ static constexpr vec3 ZERO_VEC = vec3(0.0f);
 PhysicsObject::PhysicsObject()
 	: PhysicsObject(Transform(), ZERO_VEC, ZERO_VEC) {}
 
-PhysicsObject::PhysicsObject(const Transform transform)	
+PhysicsObject::PhysicsObject(const Transform& transform)	
 	: PhysicsObject(transform, ZERO_VEC, ZERO_VEC) {}
 
 PhysicsObject::PhysicsObject(const float mass, const float momentOfInertia)
@@ -18,7 +18,7 @@ PhysicsObject::PhysicsObject(const float mass, const float momentOfInertia)
 PhysicsObject::PhysicsObject(const vec3 velocity, const vec3 angularVelocity)
 	: PhysicsObject(Transform(), velocity, angularVelocity) {}
 
-PhysicsObject::PhysicsObject(const Transform transform, const vec3 velocity, const vec3 angularVelocity) 
+PhysicsObject::PhysicsObject(const Transform& transform, const vec3 velocity, const vec3 angularVelocity) 
 	: PhysicsObject(transform, velocity, angularVelocity, DEFAULT_MASS, DEFAULT_MOI) {}
 
 // Master delegation constructor.

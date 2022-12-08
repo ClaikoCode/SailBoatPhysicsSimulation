@@ -106,6 +106,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="FloatingObject.cpp" />
     <ClCompile Include="BoatObject.cpp" />
+    <ClCompile Include="MathHelperFunctions.cpp" />
     <ClCompile Include="WindManager.cpp" />
     <ClCompile Include="SailObject.cpp" />
     <ClCompile Include="WaveObject.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Includes\CinderEssentials.h" />
     <ClInclude Include="Includes\FloatingObject.h" />
     <ClInclude Include="Includes\GameObject.h" />
+    <ClInclude Include="Includes\MathHelperFunctions.h" />
     <ClInclude Include="Includes\NaturalConstants.h" />
     <ClInclude Include="Includes\SailObject.h" />
     <ClInclude Include="Includes\ValueRandomizationVolume.h" />

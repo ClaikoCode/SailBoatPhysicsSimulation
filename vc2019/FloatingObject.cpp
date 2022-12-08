@@ -10,7 +10,7 @@ FloatingObject::FloatingObject()
 	: FloatingObject(DEFAULT_BOX_SIZE) {}
 
 FloatingObject::FloatingObject(const float boxSize)
-	: m_BoxSize(boxSize), m_AttachedObject(nullptr)
+	: m_BoxSize(boxSize)
 {
 	InitFloaterMesh();	
 }
@@ -43,7 +43,6 @@ float FloatingObject::CalculateSubmergedVolume(const float globalSeaHeight) cons
 void FloatingObject::AttachToObject(const PhysicsObject& object)
 {
 	m_Transform.SetParentTransform(object.m_Transform);
-	m_AttachedObject = &object;
 }
 
 void FloatingObject::InitFloaterMesh()
