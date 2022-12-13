@@ -1,6 +1,6 @@
 #include "Includes/BoatObject.h"
 #include "Includes/NaturalConstants.h"
-#include "Includes/MathHelperFunctions.h"
+#include "Includes/MathHelpers.h"
 
 #include "cinder/Log.h"
 
@@ -26,6 +26,7 @@ BoatObject::BoatObject(const float width, const float depth)
 	: PhysicsObject(_MASS_SCALING* DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated last in constructor.
 	m_Floaters(),
 	m_WaveManager(nullptr),
+	m_WindManager(nullptr),
 	m_SailObject(),
 	m_KeelObject(),
 	m_BoatDimensions({ width, DEFAULT_HEIGHT, depth })
@@ -71,30 +72,7 @@ void BoatObject::Update()
 
 void BoatObject::PhysicsUpdate(const float deltaTime)
 {
-	static float totalTime = 0.0f;
-	totalTime += deltaTime;
-	static WindManager windManager = WindManager();
-	vec3 windDir = windManager.GetWindDirAtPos(m_Transform.GetGlobalPosition(), totalTime);
-	//this->AddForce(windDir * 10000.0f);
-
-
-	// Calculate the force applied from each floater thats attached to the boat.
-	for (const FloatingObject& floater : m_Floaters)
-	{
-		float globalHeightLevel = 0.0f;
-		if (m_WaveManager)
-		{
-			vec3 globalFloaterPos = floater.m_Transform.GetGlobalPosition();
-			globalHeightLevel = m_WaveManager->CalculateWaveHeight(globalFloaterPos.x, globalFloaterPos.z);
-		}
-
-		float submergedVolume = floater.CalculateSubmergedVolume(globalHeightLevel);
-		float buoyancyForce = submergedVolume * NaturalConstants::DENSITY_WATER * NaturalConstants::GRAVITATIONAL_CONSTANT; // V * rho * g
-		vec3 buoyancyForceVec = buoyancyForce * -glm::normalize(NaturalConstants::gravity); // Goes opposite the direction of gravity.
-
-		AddForceAtPosition(buoyancyForceVec, GetFloaterPosRelativeBoat(floater));
-	}
-
+	ApplyFloaterForces();
 	DefaultPhysicsUpdate(deltaTime);
 }
 
@@ -106,6 +84,11 @@ void BoatObject::AttachWaveManager(const WaveManager& waveManager)
 	// Move boat to wherever water plane is and at a proper wave height.
 	//const vec3 currentPos = m_Transform.GetGlobalPosition();
 	//float waterHeight = m_WaveManager->CalculateWaveHeight(currentPos.x, currentPos.z);
+}
+
+void BoatObject::AttachWindManager(const WindManager& windManager)
+{
+	m_WindManager = &windManager;
 }
 
 void BoatObject::DetachWaveManager()
@@ -205,6 +188,7 @@ void BoatObject::DefaultCopy(const BoatObject& other)
 {
 	m_Floaters = other.m_Floaters;
 	m_WaveManager = other.m_WaveManager;
+	m_WindManager = other.m_WindManager;
 	m_BoatDimensions = other.m_BoatDimensions;
 
 	// Copy sail values and set this transform as new parent.
@@ -238,21 +222,31 @@ void BoatObject::AddFloaterPair(const FloatingObject& floater, const vec3& posit
 	m_Floaters.back().m_Transform.SetLocalPosition(-position);
 }
 
-cinder::vec3 BoatObject::GetFloaterPosRelativeBoat(const FloatingObject& floater) const
+void BoatObject::ApplyFloaterForces()
 {
+	for (const FloatingObject& floater : m_Floaters)
+	{
+		float globalHeightLevel = 0.0f;
+		if (m_WaveManager)
+		{
+			vec3 globalFloaterPos = floater.m_Transform.GetGlobalPosition();
+			globalHeightLevel = m_WaveManager->CalculateWaveHeight(globalFloaterPos.x, globalFloaterPos.z);
+		}
 
-	vec3 currentRot = m_Transform.GetLocalRotation();
-	mat4 rotMatrix = glm::eulerAngleXYZ(currentRot.x, currentRot.y, currentRot.z);
-	// Rotates the floaters position by the boats current rotation. This gets the floaters position from the frame of reference of the boat.
-	vec3 rotatedPos = rotMatrix * vec4(floater.m_Transform.GetLocalPosition(), 1.0f);
+		const vec3 buoyancyForceVec = floater.CalculateBuoyancyForce(globalHeightLevel);
+		AddForceAtPosition(buoyancyForceVec, floater.m_Transform.GetGlobalPosition());
+	}
+}
 
-	return rotatedPos;
+void BoatObject::ApplyWindForces()
+{
+	const vec3 sailGlobalPos = m_SailObject.m_Transform.GetGlobalPosition();
 }
 
 glm::vec3 BoatObject::CalculateLiftForce(const vec3 windForce) const
 {
 	const vec3 globalSailDirection = m_SailObject.GetGlobalSailDirection();
 	// This projection gives how much of the wind's force is acted in the direction of the sail.
-	return MathFuncs::ProjectVector(windForce, globalSailDirection);
+	return MathHelpers::ProjectVector(windForce, globalSailDirection);
 }
 

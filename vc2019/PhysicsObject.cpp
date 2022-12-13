@@ -53,7 +53,11 @@ void PhysicsObject::AddForce(const vec3 force)
 void PhysicsObject::AddForceAtPosition(const vec3& force, const vec3& position)
 {
 	AddForce(force);
-	m_TotalAddedTorque += glm::cross(position, force);
+
+	// Gets position vector relative objects global center of mass.
+	const vec3 CMRelativePos = position - this->m_Transform.GetGlobalPosition();
+	const vec3 torque = glm::cross(CMRelativePos, force);
+	AddTorque(torque);
 }
 
 void PhysicsObject::AddForces(const std::vector<vec3>& forces)

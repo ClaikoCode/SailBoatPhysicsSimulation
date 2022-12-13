@@ -1,12 +1,12 @@
-#include "Includes/MathHelperFunctions.h"
+#include "Includes/MathHelpers.h"
 
 
-float MathHelperFunctions::InverseLerp(const float value, const float minVal, const float maxVal)
+float MathHelpers::InverseLerp(const float value, const float minVal, const float maxVal)
 {
 	return glm::clamp((value - minVal) / (maxVal - minVal), 0.0f, 1.0f);
 }
 
-glm::vec2 MathHelperFunctions::InverseLerp(const vec2 values, const float minVal, const float maxVal)
+glm::vec2 MathHelpers::InverseLerp(const vec2 values, const float minVal, const float maxVal)
 {
 	const float newX = InverseLerp(values.x, minVal, maxVal);
 	const float newY = InverseLerp(values.y, minVal, maxVal);
@@ -14,7 +14,7 @@ glm::vec2 MathHelperFunctions::InverseLerp(const vec2 values, const float minVal
 	return vec2(newX, newY);
 }
 
-glm::vec3 MathHelperFunctions::InverseLerp(const vec3 values, const float minVal, const float maxVal)
+glm::vec3 MathHelpers::InverseLerp(const vec3 values, const float minVal, const float maxVal)
 {
 	const float newX = InverseLerp(values.x, minVal, maxVal);
 	const float newY = InverseLerp(values.y, minVal, maxVal);
@@ -23,18 +23,18 @@ glm::vec3 MathHelperFunctions::InverseLerp(const vec3 values, const float minVal
 	return vec3(newX, newY, newZ);
 }
 
-float MathHelperFunctions::Remap(const float value, const float inputMin, const float inputMax, const float outputMin, const float outputMax)
+float MathHelpers::Remap(const float value, const float inputMin, const float inputMax, const float outputMin, const float outputMax)
 {
 	const float t = InverseLerp(value, inputMin, inputMax);
 	return glm::lerp(outputMin, outputMax, t);
 }
 
-glm::vec3 MathHelperFunctions::ProjectVector(const vec3 a, const vec3 b)
+glm::vec3 MathHelpers::ProjectVector(const vec3 a, const vec3 b)
 {
 	return (glm::dot(a, b) / glm::length(b)) * glm::normalize(b);
 }
 
-glm::vec2 MathHelperFunctions::Remap(const vec2 values, const float inputMin, const float inputMax, const float outputMin, const float outputMax)
+glm::vec2 MathHelpers::Remap(const vec2 values, const float inputMin, const float inputMax, const float outputMin, const float outputMax)
 {
 	const float newX = Remap(values.x, inputMin, inputMax, outputMin, outputMax);
 	const float newY = Remap(values.y, inputMin, inputMax, outputMin, outputMax);

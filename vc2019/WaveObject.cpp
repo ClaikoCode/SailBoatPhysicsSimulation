@@ -2,7 +2,7 @@
 
 constexpr vec3 DEFAULT_WATER_COLOR = vec3(0.0f, 84.0f, 147.0f) / 255.0f;
 constexpr float DEFAULT_WATER_SIZE = 500.0f;
-constexpr uint32_t DEFAULT_SUB_DIVISION = 200;
+constexpr uint32_t DEFAULT_SUB_DIVISION = 100;
 
 WaveObject::WaveObject()
 	: WaveObject(DEFAULT_WATER_SIZE) {}

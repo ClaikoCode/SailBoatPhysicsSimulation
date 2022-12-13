@@ -12,10 +12,11 @@ public:
 
 	~FloatingObject() = default;
 
-	virtual void Draw() override;
-	virtual void Update() override;
+	void Draw() override;
+	void Update() override;
 
 	float CalculateSubmergedVolume(const float globalSeaHeight) const;
+	vec3 CalculateBuoyancyForce(const float globalSeaHeight) const;
 
 	void AttachToObject(const PhysicsObject& object);
 

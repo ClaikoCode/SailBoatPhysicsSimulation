@@ -1,5 +1,6 @@
 #include "Includes/SailObject.h"
 #include "Includes/NaturalConstants.h"
+#include "Includes/MathHelpers.h"
 
 constexpr vec3 DEFAULT_SAIL_COLOR = vec3(255.0f) / 255.0f;
 constexpr float DEFAULT_SAIL_HEIGHT = 25.0f; // Y-axis height
@@ -43,9 +44,7 @@ glm::vec3 SailObject::GetGlobalSailDirection() const
 
 glm::vec3 SailObject::GetLocalSailDirection() const
 {
-	static const vec3 right = vec3(1.0f, 0.0f, 0.0f); // Unit vector in positive X.
-	static const vec3 up = vec3(0.0f, 1.0f, 0.0f); // Unit vector in positive Y.
-	return glm::rotate(right, m_SailAngle, up);
+	return glm::rotate(MathHelpers::RIGHT_VEC, m_SailAngle, MathHelpers::UP_VEC);
 }
 
 void SailObject::InitSailMesh()

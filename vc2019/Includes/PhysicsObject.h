@@ -24,7 +24,7 @@ public:
 	virtual void PhysicsUpdate(const float deltaTime);
 
 	void AddForce(const vec3 force);
-	// Position is relative to the object position.
+	// Position should be in world space.
 	void AddForceAtPosition(const vec3& force, const vec3& position);
 	void AddForces(const std::vector<vec3>& forces);
 

@@ -56,7 +56,10 @@
     <ClCompile Include="WindManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MathHelperFunctions.cpp">
+    <ClCompile Include="MathHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KeelObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -103,7 +106,10 @@
     <ClInclude Include="Includes\WindManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\MathHelperFunctions.h">
+    <ClInclude Include="Includes\MathHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\KeelObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

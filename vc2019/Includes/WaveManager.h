@@ -11,8 +11,9 @@ public:
 	float CalculateWaveHeight(const float x, const float z) const;
 
 	void StepTime();
+	void DrawWaves();
 
 public:
-	WaveObject* m_WaveObject;
+	WaveObject m_WaveObject;
 	float m_TimePassed;
 };

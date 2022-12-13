@@ -13,13 +13,18 @@
 #include "Includes/NaturalConstants.h"
 
 Scene::Scene()
-	: m_WorldTimer(false), m_Camera(), m_CameraUI(), m_PhysicsObjects(), m_GameObjects(), m_WaveManager() {}
+	: m_WorldTimer(false), 
+	m_Camera(), 
+	m_CameraUI(), 
+	m_PhysicsObjects(), 
+	m_GameObjects(), 
+	m_WaveManager(),
+	m_WindManager() {}
 
 void Scene::SetupScene()
 {
 	SetupCamera();
 	SetupObjects();
-	SetupWater();
 }
 
 void Scene::UpdateScene()
@@ -32,6 +37,8 @@ void Scene::UpdateScene()
 
 	m_WaveManager.StepTime();
 	m_WaveManager.CalculateWaveVerticies();
+
+	m_WindManager.StepTime(timeDelta);
 	
 	UpdateObjects(timeDelta);
 }
@@ -41,6 +48,9 @@ void Scene::DrawScene()
 {
 	DrawCamera();
 	DrawObjects();
+
+	m_WaveManager.DrawWaves();
+	//m_WindManager.VisualizeField(500, 500, 25.0f);
 }
 
 
@@ -90,23 +100,12 @@ void Scene::SetupObjects()
 	const float boxVal = 0.0f;
 	Randomization::ValueRandomizationVolume VRV = Randomization::ValueRandomizationVolume(vec3(boxVal), vec3(0.0f, boxVal + 15.0f, 0.0f));
 
-	WaveObject waveObject = WaveObject();
-	m_GameObjects.push_back(std::make_shared<WaveObject>(waveObject));
-
-	m_WaveManager = WaveManager();
-	m_WaveManager.m_WaveObject = dynamic_cast<WaveObject*>(m_GameObjects.back().get());
-	
-	// Setup test objects
+	// Setup boat object
 	BoatObject boatObject = BoatObject();
 	boatObject.AttachWaveManager(m_WaveManager);
+	boatObject.AttachWindManager(m_WindManager);
 	m_PhysicsObjects.push_back(std::make_shared<BoatObject>(boatObject));
 	m_GameObjects.push_back(m_PhysicsObjects.back());
-}
-
-void Scene::SetupWater()
-{
-	// TODO: Uncomment wave manager.
-	// m_WaveManager = WaveManager();
 }
 
 

@@ -1,5 +1,6 @@
 #include "Includes/FloatingObject.h"
-#include "Includes/MathHelperFunctions.h"
+#include "Includes/MathHelpers.h"
+#include "Includes/NaturalConstants.h"
 
 constexpr float DEFAULT_BOX_SIZE = 0.5f;
 
@@ -35,9 +36,16 @@ float FloatingObject::CalculateSubmergedVolume(const float globalSeaHeight) cons
 
 	// Gets a value between 0 and 1 based on how much of the box is under the water.
 	// 1 would mean that the whole box is under water and 0 means that no part of the box is under water.
-	float submergedVolume = MathHelperFunctions::InverseLerp(heightDiff, minVal, maxVal);
+	float submergedVolume = MathHelpers::InverseLerp(heightDiff, minVal, maxVal);
 
 	return submergedVolume * GetTotalVolume();
+}
+
+vec3 FloatingObject::CalculateBuoyancyForce(const float globalSeaHeight) const
+{
+	const float submergedVolume = CalculateSubmergedVolume(globalSeaHeight);
+	const float buoyancyForce = submergedVolume * NaturalConstants::DENSITY_WATER * NaturalConstants::GRAVITATIONAL_CONSTANT; // V * rho * g
+	return buoyancyForce * -glm::normalize(NaturalConstants::gravity); // Goes opposite the direction of gravity.
 }
 
 void FloatingObject::AttachToObject(const PhysicsObject& object)

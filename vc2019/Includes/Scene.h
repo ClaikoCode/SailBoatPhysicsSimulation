@@ -9,7 +9,7 @@
 
 #include "Includes/PhysicsObject.h"
 #include "Includes/WaveManager.h"
-
+#include "Includes/WindManager.h"
 
 class Scene
 {
@@ -30,7 +30,6 @@ private:
 
 	void SetupCamera();
 	void SetupObjects();
-	void SetupWater();
 
 	void UpdateObjects(const float deltaTime);
 
@@ -48,6 +47,7 @@ private:
 	std::vector<std::shared_ptr<GameObject>> m_GameObjects;
 
 	WaveManager m_WaveManager;
+	WindManager m_WindManager;
 };
 
 
