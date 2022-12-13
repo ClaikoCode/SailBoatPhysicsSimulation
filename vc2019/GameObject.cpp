@@ -3,20 +3,22 @@
 
 #define _GET_DEFAULT_SHADER() gl::getStockShader(gl::ShaderDef().lambert().color())
 constexpr vec3 DEFAULT_MODEL_COLOR = vec3(1.0f);
-constexpr bool DEFAULT_STATIC_STATE = false;
-constexpr bool DEFAULT_DRAWABLE_STATE = true;
+
 
 GameObject::GameObject()
 	: GameObject(Transform()) {}
 
 GameObject::GameObject(const Transform& transform)
-	: m_ShaderRef(_GET_DEFAULT_SHADER()),
+	: Object(transform),
+	m_ShaderRef(_GET_DEFAULT_SHADER()),
 	m_Mesh(),
 	m_TriMesh(),
-	m_MeshColor(DEFAULT_MODEL_COLOR),
-	m_Transform(transform),
-	m_IsStatic(DEFAULT_STATIC_STATE),
-	m_IsDrawable(DEFAULT_DRAWABLE_STATE) {}
+	m_MeshColor(DEFAULT_MODEL_COLOR) {}
+
+void GameObject::Draw()
+{
+	DefaultDraw();
+}
 
 void GameObject::SetMesh(const geom::Source& geometrySource)
 {

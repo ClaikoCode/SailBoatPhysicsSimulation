@@ -33,16 +33,9 @@ PhysicsObject::PhysicsObject(const Transform& transform, const vec3 velocity, co
 	m_TotalAddedTorque(0.0f),
 	m_GravityEnabled(DEFAULT_GRAVITY_MODE) {}
 
-void PhysicsObject::Update() {}
-
 void PhysicsObject::PhysicsUpdate(const float deltaTime)
 {
 	DefaultPhysicsUpdate(deltaTime);
-}
-
-void PhysicsObject::Draw()
-{
-	DefaultDraw();
 }
 
 void PhysicsObject::AddForce(const vec3 force)

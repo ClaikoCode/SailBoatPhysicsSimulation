@@ -19,8 +19,6 @@ public:
 
 	~PhysicsObject() = default;
 
-	virtual void Draw() override;
-	virtual void Update() override;
 	virtual void PhysicsUpdate(const float deltaTime);
 
 	void AddForce(const vec3 force);

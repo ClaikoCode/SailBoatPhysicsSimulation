@@ -119,7 +119,7 @@ void BoatObject::InitFloaters()
 	FloatingObject floater = FloatingObject(floaterSize);
 
 	floater.AttachToObject(*this);
-	floater.m_IsDrawable = true;
+	floater.EnableDrawable();
 
 	//VolumetricFloaterInit();
 

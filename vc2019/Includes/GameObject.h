@@ -1,9 +1,10 @@
 #pragma once
 #include "Includes/CinderEssentials.h"
 #include "Includes/Transform.h"
+#include "Includes/Object.h"
 
 
-class GameObject
+class GameObject : public Object
 {
 public:
 	GameObject();
@@ -11,8 +12,8 @@ public:
 
 	~GameObject() = default;
 
-	virtual void Draw() = 0;
-	virtual void Update() = 0;
+	virtual void Draw() override;
+	virtual void Update() override {};
 
 	void SetMesh(const geom::Source& geometrySource);
 	void SetMeshColor(const vec3 rgbColor);
@@ -29,9 +30,4 @@ protected:
 
 	// RGB Mesh color.
 	vec3 m_MeshColor;
-
-public:
-	Transform m_Transform;
-	bool m_IsStatic;
-	bool m_IsDrawable;
 };
