@@ -240,7 +240,36 @@ void BoatObject::ApplyFloaterForces()
 
 void BoatObject::ApplyWindForces()
 {
+	// Sail calculations.
 	const vec3 sailGlobalPos = m_SailObject.m_Transform.GetGlobalPosition();
+	const vec3 windForce = m_WindManager->GetWindForceAtPos(sailGlobalPos);
+	const vec3 liftForce = CalculateLiftForce(windForce);
+
+	AddForceAtPosition(liftForce, sailGlobalPos);
+
+	// Keel calculations.
+	const vec3 keelGlobalPos = m_KeelObject.m_Transform.GetGlobalPosition();
+	if (keelGlobalPos.y < m_WaveManager->CalculateWaveHeight(keelGlobalPos))
+	{
+		const vec3 keelNormal = m_KeelObject.GetGlobalKeelNormal();
+		// The resulting normal force should always point in the opposite direction of the lift force component that is parallel with the normal.
+		const vec3 keelNormalForce = -MathHelpers::ProjectVector(liftForce, keelNormal);
+
+		AddForceAtPosition(keelGlobalPos, keelNormalForce);
+	}
+
+	// Rudder calculations.
+	//const vec3 rudderGlobalPos = m_rudder
+
+
+	// See if rudder is below water.
+	// See angle of the rudder.
+	// See how well rudder is aligned with the velocity of the boat. Absolute value of the dot product between normalized normal vector and velocity. 
+	// Determine the resulting drag force by taking the maximum amount of drag (90 deg turned against the velocity)
+	// multiplied with the previously calculated dot product.
+	// Further scale with velocity squared to get accurate drag force.
+	// The direction of the normal force should be opposite of the current normal of the rudder. 
+	// Apply force at rudders position.
 }
 
 glm::vec3 BoatObject::CalculateLiftForce(const vec3 windForce) const

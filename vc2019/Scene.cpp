@@ -35,7 +35,7 @@ void Scene::UpdateScene()
 	//CI_LOG_D("Frame: " << getElapsedFrames());
 	CI_LOG_D("Time elapsed: " << timeDelta);
 
-	m_WaveManager.StepTime();
+	m_WaveManager.StepTime(timeDelta);
 	m_WaveManager.CalculateWaveVerticies();
 
 	m_WindManager.StepTime(timeDelta);

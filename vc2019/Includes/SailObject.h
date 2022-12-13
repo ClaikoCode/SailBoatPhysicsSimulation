@@ -11,7 +11,7 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	// Does not turn past 90 degrees.
+	// Expects angle in radians. 
 	void TurnSail(const float angleDelta);
 
 	float GetSailHeight() const;
@@ -24,7 +24,7 @@ private:
 	void InitSailMesh();
 
 private:
-	// Sail angle in radians around the y-axis.
+	// Sail angle in radians around the y-axis. Should only exist in range [-90, 90] degrees.
 	float m_SailAngle;
 
 	float m_SailHeight;

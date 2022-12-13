@@ -9,4 +9,6 @@ public:
 
 	void Draw() override {};
 	void Update() override {};
+
+	vec3 GetGlobalKeelNormal();
 };

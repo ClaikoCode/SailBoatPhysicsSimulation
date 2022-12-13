@@ -15,10 +15,7 @@ SailObject::SailObject()
 	InitSailMesh();
 }
 
-void SailObject::Update()
-{
-	m_Transform.SetLocalRotation( vec3(0.0f, m_SailAngle, 0.0f) );
-}
+void SailObject::Update() {}
 
 void SailObject::Draw()
 {
@@ -32,6 +29,7 @@ void SailObject::TurnSail(const float angleDelta)
 		return;
 
 	m_SailAngle += angleDelta;
+	m_Transform.UpdateLocalRotation(vec3(0.0f, angleDelta, 0.0f));
 }
 
 float SailObject::GetSailHeight() const { return m_SailHeight; }
@@ -44,7 +42,7 @@ glm::vec3 SailObject::GetGlobalSailDirection() const
 
 glm::vec3 SailObject::GetLocalSailDirection() const
 {
-	return glm::rotate(MathHelpers::RIGHT_VEC, m_SailAngle, MathHelpers::UP_VEC);
+	return glm::rotate(MathHelpers::FORWARD_VEC, m_SailAngle, MathHelpers::UP_VEC);
 }
 
 void SailObject::InitSailMesh()

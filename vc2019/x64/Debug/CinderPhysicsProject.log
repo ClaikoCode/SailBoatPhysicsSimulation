@@ -1,6 +1,5 @@
-﻿  CinderPhysicsProjectApp.cpp
-  BoatObject.cpp
+﻿  BoatObject.cpp
+  RudderObject.cpp
+  SailObject.cpp
   Scene.cpp
-  WaveManager.cpp
-  WindManager.cpp
   CinderPhysicsProject.vcxproj -> E:\Programming\Cinder\Cinder_Projects\CinderPhysicsProject\vc2019\x64\Debug\CinderPhysicsProject.exe

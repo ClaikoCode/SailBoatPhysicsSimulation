@@ -7,8 +7,8 @@
 #include "Includes/MathHelpers.h"
 
 constexpr float WAVE_AMPLITUDE = 5.0f;
-constexpr float DEFAULT_TIME_STEP = 0.5f;
 constexpr float DEFAULT_WAVE_LENGTH = 75.0f;
+constexpr float DEFAULT_TIME_SCALE = 0.2f;
 
 WaveManager::WaveManager()
 	: m_WaveObject(), m_TimePassed(0.0f) {}
@@ -43,9 +43,9 @@ void WaveManager::CalculateWaveVerticies()
 	m_WaveObject.UpdateBatchMesh();
 }
 
-void WaveManager::StepTime()
+void WaveManager::StepTime(const float deltaTime)
 {
-	m_TimePassed += DEFAULT_TIME_STEP;
+	m_TimePassed += deltaTime * DEFAULT_TIME_SCALE;
 }
 
 void WaveManager::DrawWaves()
@@ -58,4 +58,9 @@ float WaveManager::CalculateWaveHeight(const float x, const float z) const
 	float height = glm::sin((x + m_TimePassed) / DEFAULT_WAVE_LENGTH) + glm::sin((z + m_TimePassed * 2.0f) / DEFAULT_WAVE_LENGTH);
 
 	return height * WAVE_AMPLITUDE;
+}
+
+float WaveManager::CalculateWaveHeight(const vec3 worldPosition) const
+{
+	return CalculateWaveHeight(worldPosition.x, worldPosition.z);
 }

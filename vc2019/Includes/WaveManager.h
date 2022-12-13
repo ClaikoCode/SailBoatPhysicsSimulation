@@ -9,8 +9,10 @@ public:
 	
 	void CalculateWaveVerticies();
 	float CalculateWaveHeight(const float x, const float z) const;
+	// Expects a world position.
+	float CalculateWaveHeight(const vec3 worldPosition) const;
 
-	void StepTime();
+	void StepTime(const float deltaTime);
 	void DrawWaves();
 
 public:
