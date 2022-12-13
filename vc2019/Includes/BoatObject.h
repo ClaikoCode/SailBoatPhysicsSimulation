@@ -6,6 +6,7 @@
 #include "Includes/FloatingObject.h"
 #include "Includes/SailObject.h"
 #include "Includes/KeelObject.h"
+#include "Includes/RudderObject.h"
 
 #include "Includes/WaveManager.h"
 #include "Includes/WindManager.h"
@@ -35,7 +36,9 @@ public:
 
 	void AttachWaveManager(const WaveManager& waveManager);
 	void AttachWindManager(const WindManager& windManager);
+
 	void DetachWaveManager();
+	void DetachWindManager();
 
 private:
 
@@ -43,6 +46,8 @@ private:
 
 	void InitBoatBody();
 	void InitSail();
+	void InitRudder();
+	void InitKeel();
 	void InitFloaters();
 	void OuterRimFloaterInit(const FloatingObject& baseFloater);
 	void VolumetricFloaterInit();
@@ -65,6 +70,7 @@ private:
 
 	SailObject m_SailObject;
 	KeelObject m_KeelObject;
+	RudderObject m_RudderObject;
 
 	BoatObject::BoatDimensions m_BoatDimensions;
 };

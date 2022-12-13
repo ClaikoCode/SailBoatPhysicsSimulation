@@ -61,6 +61,8 @@ void BoatObject::Draw()
 	}
 
 	m_SailObject.Draw();
+	m_KeelObject.Draw();
+	m_RudderObject.Draw();
 
 	DefaultDraw();
 }
@@ -96,6 +98,11 @@ void BoatObject::DetachWaveManager()
 	m_WaveManager = nullptr;
 }
 
+void BoatObject::DetachWindManager()
+{
+	m_WindManager = nullptr;
+}
+
 void BoatObject::InitBoatBody()
 {
 	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatBreadth);
@@ -108,9 +115,19 @@ void BoatObject::InitSail()
 {
 	m_SailObject.m_Transform.SetParentTransform(this->m_Transform);
 
-	const float sailOffset = m_SailObject.GetSailHeight() / 2.0f + m_BoatDimensions.m_BoatHeight / 2.0f;
+	const float sailOffset = m_BoatDimensions.m_BoatHeight / 2.0f + m_SailObject.GetSailHeight() / 2.0f;
 	const float airGap = 2.0f; // Air gap between hull and sail (just for visuals).
 	m_SailObject.m_Transform.SetLocalPosition(0.0f, sailOffset + airGap, 0.0f);
+}
+
+void BoatObject::InitRudder()
+{
+
+}
+
+void BoatObject::InitKeel()
+{
+
 }
 
 void BoatObject::InitFloaters()

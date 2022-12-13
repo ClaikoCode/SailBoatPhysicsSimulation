@@ -1,16 +1,25 @@
 #pragma once
 #include "Includes/GameObject.h"
+#include "Includes/CinderEssentials.h"
 
-class RudderObject : public GameObject
+class RudderObject : public Object
 {
 public:
+	RudderObject();
 	RudderObject(const float rudderHeight, const float rudderWidth);
 	~RudderObject() = default;
 
-	void TurnRudder(const float turnDelta);
+	virtual void Draw() override;
+	virtual void Update() override {};
+
+	void TurnRudder(const float angleDelta);
+	vec3 GetRudderGlobalPosition();
 
 private:
-	Transform m_AttachementPoint;
+	void InitRudderModel();
+
+private:
+	GameObject m_RudderModel;
 
 	float m_RudderAngle;
 
