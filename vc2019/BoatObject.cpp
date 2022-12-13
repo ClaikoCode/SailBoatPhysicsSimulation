@@ -1,5 +1,6 @@
 #include "Includes/BoatObject.h"
 #include "Includes/NaturalConstants.h"
+#include "Includes/MathHelperFunctions.h"
 
 #include "cinder/Log.h"
 
@@ -22,10 +23,11 @@ BoatObject::BoatObject()
 
 
 BoatObject::BoatObject(const float width, const float depth)
-	: PhysicsObject(_MASS_SCALING * DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated last in constructor.
+	: PhysicsObject(_MASS_SCALING* DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated last in constructor.
 	m_Floaters(),
 	m_WaveManager(nullptr),
 	m_SailObject(),
+	m_KeelObject(),
 	m_BoatDimensions({ width, DEFAULT_HEIGHT, depth })
 {
 	InitBoatBody();
@@ -82,8 +84,8 @@ void BoatObject::PhysicsUpdate(const float deltaTime)
 		float globalHeightLevel = 0.0f;
 		if (m_WaveManager)
 		{
-			vec3 globalPos = floater.m_Transform.GetGlobalPosition();
-			globalHeightLevel = m_WaveManager->CalculateWaveHeight(globalPos.x, globalPos.z);
+			vec3 globalFloaterPos = floater.m_Transform.GetGlobalPosition();
+			globalHeightLevel = m_WaveManager->CalculateWaveHeight(globalFloaterPos.x, globalFloaterPos.z);
 		}
 
 		float submergedVolume = floater.CalculateSubmergedVolume(globalHeightLevel);
@@ -101,6 +103,7 @@ void BoatObject::AttachWaveManager(const WaveManager& waveManager)
 	m_WaveManager = &waveManager;
 	
 	// TODO: Add so that global position can be set.
+	// Move boat to wherever water plane is and at a proper wave height.
 	//const vec3 currentPos = m_Transform.GetGlobalPosition();
 	//float waterHeight = m_WaveManager->CalculateWaveHeight(currentPos.x, currentPos.z);
 }
@@ -181,6 +184,7 @@ void BoatObject::OuterRimFloaterInit(const FloatingObject& baseFloater)
 	}
 }
 
+// TODO: Implement well defined function for this.
 void BoatObject::VolumetricFloaterInit()
 {
 	const float floaterSize = m_BoatDimensions.m_BoatHeight;
@@ -191,7 +195,7 @@ void BoatObject::VolumetricFloaterInit()
 	const float decimalLimit = 0.05f;
 	while (decimalRemainder > 0.05f)
 	{
-		float divResult = m_BoatDimensions.m_BoatBreadth / (floaterSize * glm::pow(2.0f, counter));
+		float divResult = m_BoatDimensions.m_BoatBreadth / (floaterSize * glm::pow(2.0f, (float)counter));
 		decimalRemainder = divResult - glm::floor(divResult);
 		counter++;
 	}
@@ -206,6 +210,9 @@ void BoatObject::DefaultCopy(const BoatObject& other)
 	// Copy sail values and set this transform as new parent.
 	m_SailObject = other.m_SailObject;
 	m_SailObject.m_Transform.SetParentTransform(this->m_Transform);
+
+	m_KeelObject = other.m_KeelObject;
+	m_KeelObject.m_Transform.SetParentTransform(this->m_Transform);
 
 	// Re-attach all floaters to this object instead of other.
 	for (FloatingObject& floater : m_Floaters)
@@ -236,9 +243,16 @@ cinder::vec3 BoatObject::GetFloaterPosRelativeBoat(const FloatingObject& floater
 
 	vec3 currentRot = m_Transform.GetLocalRotation();
 	mat4 rotMatrix = glm::eulerAngleXYZ(currentRot.x, currentRot.y, currentRot.z);
-	// Rotates the floaters position by the boats rotation 
-	vec3 rotatedPos = rotMatrix * vec4(floater.m_Transform.GetLocalPosition(), 0.0f);
+	// Rotates the floaters position by the boats current rotation. This gets the floaters position from the frame of reference of the boat.
+	vec3 rotatedPos = rotMatrix * vec4(floater.m_Transform.GetLocalPosition(), 1.0f);
 
 	return rotatedPos;
+}
+
+glm::vec3 BoatObject::CalculateLiftForce(const vec3 windForce) const
+{
+	const vec3 globalSailDirection = m_SailObject.GetGlobalSailDirection();
+	// This projection gives how much of the wind's force is acted in the direction of the sail.
+	return MathFuncs::ProjectVector(windForce, globalSailDirection);
 }
 

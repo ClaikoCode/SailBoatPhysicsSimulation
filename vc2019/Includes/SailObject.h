@@ -17,7 +17,8 @@ public:
 	float GetSailHeight() const;
 	float GetSailWidth() const;
 	
-	vec3 GetSailDirection() const;
+	vec3 GetGlobalSailDirection() const;
+	vec3 GetLocalSailDirection() const;
 
 private:
 	void InitSailMesh();

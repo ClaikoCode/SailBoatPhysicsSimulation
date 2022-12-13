@@ -22,10 +22,15 @@ cinder::mat4 Transform::GetLocalTransform() const
 {
 	mat4 localTransform =
 		glm::translate(GetLocalPosition()) *
-		glm::eulerAngleXYZ(m_Rotation.x, m_Rotation.y, m_Rotation.z) *
+		GetLocalRotationMatrix() *
 		glm::scale(GetLocalScale());
 
 	return localTransform;
+}
+
+glm::mat4 Transform::GetLocalRotationMatrix() const
+{
+	return glm::eulerAngleXYZ(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 }
 
 void Transform::SetParentTransform(const Transform& parent)
@@ -37,7 +42,7 @@ cinder::mat4 Transform::GetUnscaledGlobalTransform() const
 {
 	mat4 transformationMatrix =
 		glm::translate(GetLocalPosition()) *
-		glm::eulerAngleXYZ(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+		GetLocalRotationMatrix();
 
 	if (m_Parent != nullptr)
 	{

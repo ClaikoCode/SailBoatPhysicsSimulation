@@ -1,2 +1,6 @@
-﻿  WaveManager.cpp
+﻿  FloatingObject.cpp
+  BoatObject.cpp
+  MathHelperFunctions.cpp
+  WindManager.cpp
+  WaveManager.cpp
   CinderPhysicsProject.vcxproj -> E:\Programming\Cinder\Cinder_Projects\CinderPhysicsProject\vc2019\x64\Debug\CinderPhysicsProject.exe

@@ -6,6 +6,7 @@
 #include "Includes/FloatingObject.h"
 #include "Includes/WaveManager.h"
 #include "Includes/SailObject.h"
+#include "Includes/KeelObject.h"
 
 class BoatObject : public PhysicsObject
 {
@@ -25,9 +26,9 @@ public:
 	BoatObject(const BoatObject& other);
 	BoatObject& operator=(const BoatObject& other);
 	
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void PhysicsUpdate(const float deltaTime) override;
+	void Draw() override;
+	void Update() override;
+	void PhysicsUpdate(const float deltaTime) override;
 
 	void AttachWaveManager(const WaveManager& waveManager);
 	void DetachWaveManager();
@@ -46,11 +47,14 @@ private:
 	void AddFloaterPair(const FloatingObject& floater, const vec3& position);
 	vec3 GetFloaterPosRelativeBoat(const FloatingObject& floater) const;
 
+	vec3 CalculateLiftForce(const vec3 windDirection) const;
+
 private:
 	std::vector<FloatingObject> m_Floaters;
 	const WaveManager* m_WaveManager;
 
 	SailObject m_SailObject;
-	
+	KeelObject m_KeelObject;
+
 	BoatObject::BoatDimensions m_BoatDimensions;
 };

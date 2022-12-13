@@ -2,6 +2,7 @@
 
 #include "Includes/CinderEssentials.h"
 
+
 namespace MathHelperFunctions
 {
 	// Gives a clamped value between 0.0 and 1.0 depending on where value sits in the interval [minVal, maxVal]. 
@@ -17,4 +18,10 @@ namespace MathHelperFunctions
 	float Remap(const float value, const float inputMin, const float inputMax, const float outputMin, const float outputMax);
 
 	vec2 Remap(const vec2 values, const float inputMin, const float inputMax, const float outputMin, const float outputMax);
+
+	// Projects the vector 'a' onto vector 'b'.
+	vec3 ProjectVector(const vec3 a, const vec3 b);
 };
+
+// Namespace alias for shorthand.
+namespace MathFuncs = MathHelperFunctions;

@@ -14,6 +14,8 @@ public:
 	mat4 GetGlobalTransform() const;
 	mat4 GetLocalTransform() const;
 
+	mat4 GetLocalRotationMatrix() const;
+
 	void SetParentTransform(const Transform& parent);
 
 	// ----- Local transform functions -----

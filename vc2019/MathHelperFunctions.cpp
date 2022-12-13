@@ -29,6 +29,11 @@ float MathHelperFunctions::Remap(const float value, const float inputMin, const 
 	return glm::lerp(outputMin, outputMax, t);
 }
 
+glm::vec3 MathHelperFunctions::ProjectVector(const vec3 a, const vec3 b)
+{
+	return (glm::dot(a, b) / glm::length(b)) * glm::normalize(b);
+}
+
 glm::vec2 MathHelperFunctions::Remap(const vec2 values, const float inputMin, const float inputMax, const float outputMin, const float outputMax)
 {
 	const float newX = Remap(values.x, inputMin, inputMax, outputMin, outputMax);
