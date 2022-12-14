@@ -81,7 +81,6 @@ void PhysicsObject::DisableGravity() { m_GravityEnabled = false; }
 
 void PhysicsObject::DefaultPhysicsUpdate(const float deltaTime)
 {
-
 	if (m_IsStatic == false)
 	{
 		if (m_GravityEnabled)

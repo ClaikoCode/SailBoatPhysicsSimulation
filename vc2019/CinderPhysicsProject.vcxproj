@@ -107,7 +107,7 @@
     <ClCompile Include="FloatingObject.cpp" />
     <ClCompile Include="BoatObject.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="RudderObject.cpp" />
+    <ClCompile Include="SpadeRudderObject.cpp" />
     <ClCompile Include="KeelObject.cpp" />
     <ClCompile Include="MathHelpers.cpp" />
     <ClCompile Include="WindManager.cpp" />
@@ -129,7 +129,7 @@
     <ClInclude Include="Includes\MathHelpers.h" />
     <ClInclude Include="Includes\NaturalConstants.h" />
     <ClInclude Include="Includes\Object.h" />
-    <ClInclude Include="Includes\RudderObject.h" />
+    <ClInclude Include="Includes\SpadeRudderObject.h" />
     <ClInclude Include="Includes\SailObject.h" />
     <ClInclude Include="Includes\ValueRandomizationVolume.h" />
     <ClInclude Include="Includes\PhysicsObject.h" />

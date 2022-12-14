@@ -6,20 +6,28 @@
 #include "Includes/FloatingObject.h"
 #include "Includes/SailObject.h"
 #include "Includes/KeelObject.h"
-#include "Includes/RudderObject.h"
+#include "Includes/SpadeRudderObject.h"
 
 #include "Includes/WaveManager.h"
 #include "Includes/WindManager.h"
 
+/* 
+The dimensions of a boat object compared to normal 3D axises should be seen as:
+
+X: width or breadth
+Y: height
+Z: length 
+
+*/
 class BoatObject : public PhysicsObject
 {
 private:
-	// Dimensions for boat length, height and breadth. The purpose is to make references to boat dimensions more readable.
+	// Dimensions for boat length, height and width. The purpose is to make references to boat dimensions more readable.
 	struct BoatDimensions
 	{
 		float m_BoatLength;
 		float m_BoatHeight;
-		float m_BoatBreadth;
+		float m_BoatWidth;
 	};
 
 public:
@@ -60,7 +68,7 @@ private:
 	// Applies forces that the wind creates.
 	void ApplyWindForces();
 
-	vec3 CalculateLiftForce(const vec3 windDirection) const;
+	vec3 CalculateSailLiftForce(const vec3 windDirection) const;
 	
 private:
 	std::vector<FloatingObject> m_Floaters;
@@ -70,7 +78,7 @@ private:
 
 	SailObject m_SailObject;
 	KeelObject m_KeelObject;
-	RudderObject m_RudderObject;
+	SpadeRudderObject m_RudderObject;
 
 	BoatObject::BoatDimensions m_BoatDimensions;
 };

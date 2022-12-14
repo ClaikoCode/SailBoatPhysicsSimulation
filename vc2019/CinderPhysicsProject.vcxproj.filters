@@ -62,7 +62,7 @@
     <ClCompile Include="KeelObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RudderObject.cpp">
+    <ClCompile Include="SpadeRudderObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
@@ -118,7 +118,7 @@
     <ClInclude Include="Includes\KeelObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\RudderObject.h">
+    <ClInclude Include="Includes\SpadeRudderObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Includes\Object.h">

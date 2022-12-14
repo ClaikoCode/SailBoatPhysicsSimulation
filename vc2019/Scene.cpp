@@ -32,6 +32,9 @@ void Scene::UpdateScene()
 	float timeDelta = (float)m_WorldTimer.getSeconds();
 	m_WorldTimer.start();
 
+	if (timeDelta > 2.0f)
+		timeDelta = 0.02f;
+
 	//CI_LOG_D("Frame: " << getElapsedFrames());
 	CI_LOG_D("Time elapsed: " << timeDelta);
 

@@ -5,7 +5,7 @@
 #include "cinder/Log.h"
 
 constexpr float DEFAULT_WIDTH = 50.0f;
-constexpr float DEFAULT_DEPTH = 70.0f;
+constexpr float DEFAULT_LENGTH = 70.0f;
 constexpr float DEFAULT_HEIGHT = 6.0f;
 constexpr float DEFAULT_MASS = 500.0f;
 
@@ -19,23 +19,26 @@ constexpr float _MoI_SCALING = 2.0f;
 constexpr float _MASS_SCALING = 5.0f;
 
 BoatObject::BoatObject()
-	: BoatObject(DEFAULT_WIDTH, DEFAULT_DEPTH) {}
+	: BoatObject(DEFAULT_WIDTH, DEFAULT_LENGTH) {}
 
 
-BoatObject::BoatObject(const float width, const float depth)
+BoatObject::BoatObject(const float width, const float length)
 	: PhysicsObject(_MASS_SCALING* DEFAULT_MASS, 0.0f), // MoI set to 0.0f as it is going to be recalculated last in constructor.
 	m_Floaters(),
 	m_WaveManager(nullptr),
 	m_WindManager(nullptr),
 	m_SailObject(),
 	m_KeelObject(),
-	m_BoatDimensions({ width, DEFAULT_HEIGHT, depth })
+	m_BoatDimensions({ length, DEFAULT_HEIGHT, width })
 {
 	InitBoatBody();
+
 	InitSail();
+	InitRudder();
+	InitKeel();
 	InitFloaters();
 
-	m_MomentOfInertia = CalculateMomentOfInertia(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatBreadth);
+	m_MomentOfInertia = CalculateMomentOfInertia(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatWidth);
 }
 
 BoatObject::BoatObject(const BoatObject& other) 
@@ -67,14 +70,12 @@ void BoatObject::Draw()
 	DefaultDraw();
 }
 
-void BoatObject::Update()
-{
-	m_SailObject.Update();
-}
+void BoatObject::Update() {}
 
 void BoatObject::PhysicsUpdate(const float deltaTime)
 {
 	ApplyFloaterForces();
+	ApplyWindForces();
 	DefaultPhysicsUpdate(deltaTime);
 }
 
@@ -105,7 +106,7 @@ void BoatObject::DetachWindManager()
 
 void BoatObject::InitBoatBody()
 {
-	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatLength, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatBreadth);
+	const vec3 sizeVector = vec3(m_BoatDimensions.m_BoatWidth, m_BoatDimensions.m_BoatHeight, m_BoatDimensions.m_BoatLength);
 	geom::Cube boatBody = geom::Cube().size(sizeVector).subdivisions(10);
 	SetMesh(boatBody);
 	SetMeshColor(DEFAULT_BOAT_COLOR);
@@ -122,12 +123,14 @@ void BoatObject::InitSail()
 
 void BoatObject::InitRudder()
 {
-
+	m_RudderObject.m_Transform.SetParentTransform(this->m_Transform);
+	m_RudderObject.m_Transform.SetLocalPosition(vec3(0.0f, -m_BoatDimensions.m_BoatHeight / 2.0f, -m_BoatDimensions.m_BoatLength / 2.0f));
 }
 
 void BoatObject::InitKeel()
 {
-
+	m_KeelObject.m_Transform.SetParentTransform(this->m_Transform);
+	m_KeelObject.m_Transform.SetLocalPosition(vec3(0.0f, -m_BoatDimensions.m_BoatHeight / 2.0f, 0.0f));
 }
 
 void BoatObject::InitFloaters()
@@ -150,18 +153,18 @@ void BoatObject::OuterRimFloaterInit(const FloatingObject& baseFloater)
 	const uint32_t nHeightLevels = 7;
 
 	const float sideDelta = m_BoatDimensions.m_BoatLength / (float)nSideFloaters;
-	const float frontDelta = m_BoatDimensions.m_BoatBreadth / (float)nFrontBackFloaters;
+	const float frontDelta = m_BoatDimensions.m_BoatWidth / (float)nFrontBackFloaters;
 	const float heightDelta = m_BoatDimensions.m_BoatHeight / (float)nHeightLevels;
 
 	const float halfBoatLength = m_BoatDimensions.m_BoatLength / 2.0f;
-	const float halfBoatBreadth = m_BoatDimensions.m_BoatBreadth / 2.0f;
+	const float halfBoatBreadth = m_BoatDimensions.m_BoatWidth / 2.0f;
 	const float halfBoatHeight = m_BoatDimensions.m_BoatHeight / 2.0f;
 
-	const vec3 sideDeltaVec = vec3(-sideDelta, 0.0f, 0.0f);
-	const vec3 frontDeltaVec = vec3(0.0f, 0.0f, -frontDelta);
+	const vec3 sideDeltaVec = vec3(0.0f, 0.0f, -sideDelta);
+	const vec3 frontDeltaVec = vec3(-frontDelta, 0.0f, 0.0f);
 	const vec3 heightDeltaVec = vec3(0.0f, -heightDelta, 0.0f);
 
-	const vec3 topRightBoatQuadrant = vec3(halfBoatLength, 0.0f, halfBoatBreadth);
+	const vec3 topRightBoatQuadrant = vec3(halfBoatBreadth, 0.0f, halfBoatLength);
 	const vec3 bottomOfBoat = vec3(0.0f, halfBoatHeight, 0.0f);
 
 
@@ -195,7 +198,7 @@ void BoatObject::VolumetricFloaterInit()
 	const float decimalLimit = 0.05f;
 	while (decimalRemainder > 0.05f)
 	{
-		float divResult = m_BoatDimensions.m_BoatBreadth / (floaterSize * glm::pow(2.0f, (float)counter));
+		float divResult = m_BoatDimensions.m_BoatWidth / (floaterSize * glm::pow(2.0f, (float)counter));
 		decimalRemainder = divResult - glm::floor(divResult);
 		counter++;
 	}
@@ -214,6 +217,10 @@ void BoatObject::DefaultCopy(const BoatObject& other)
 
 	m_KeelObject = other.m_KeelObject;
 	m_KeelObject.m_Transform.SetParentTransform(this->m_Transform);
+
+	m_RudderObject = other.m_RudderObject; // TODO: This will not change the rudder models parent transform.
+	m_RudderObject.m_RudderModel.m_Transform.SetParentTransform(m_RudderObject.m_Transform);
+	m_RudderObject.m_Transform.SetParentTransform(this->m_Transform);
 
 	// Re-attach all floaters to this object instead of other.
 	for (FloatingObject& floater : m_Floaters)
@@ -260,36 +267,59 @@ void BoatObject::ApplyWindForces()
 	// Sail calculations.
 	const vec3 sailGlobalPos = m_SailObject.m_Transform.GetGlobalPosition();
 	const vec3 windForce = m_WindManager->GetWindForceAtPos(sailGlobalPos);
-	const vec3 liftForce = CalculateLiftForce(windForce);
+	const vec3 sailLiftForce = CalculateSailLiftForce(windForce) * 5000.0f;
 
-	AddForceAtPosition(liftForce, sailGlobalPos);
+	AddForceAtPosition(sailLiftForce, sailGlobalPos);
 
 	// Keel calculations.
 	const vec3 keelGlobalPos = m_KeelObject.m_Transform.GetGlobalPosition();
 	if (keelGlobalPos.y < m_WaveManager->CalculateWaveHeight(keelGlobalPos))
 	{
 		const vec3 keelNormal = m_KeelObject.GetGlobalKeelNormal();
+
 		// The resulting normal force should always point in the opposite direction of the lift force component that is parallel with the normal.
-		const vec3 keelNormalForce = -MathHelpers::ProjectVector(liftForce, keelNormal);
+		const vec3 keelNormalForce = -MathHelpers::ProjectVector(sailLiftForce, keelNormal);
 
 		AddForceAtPosition(keelGlobalPos, keelNormalForce);
 	}
 
-	// Rudder calculations.
-	//const vec3 rudderGlobalPos = m_rudder
+	// Rudder calculations. Lift force from bernoullis lift equation: L = 1/2 * C * p * v^2 * S. S is the projected area.
+	const vec3 rudderGlobalPos = m_RudderObject.GetRudderGlobalPosition();
+	if (rudderGlobalPos.y < m_WaveManager->CalculateWaveHeight(rudderGlobalPos))
+	{
+		const vec3 rudderNormal = m_RudderObject.GetGlobalRudderNormal();
+		const float rudderLiftCoefficient = m_RudderObject.GetLiftCoefficient();
+		const float velocitySquared = dot(m_Velocity, m_Velocity); // = len(velocity)^2
+		const float rudderArea = m_RudderObject.GetRudderArea();
+
+		// Value between -1 and 1. Absolute value shows percentage of area exposed to flow direction. 
+		// Sign is used to always get correct lift force direction.
+		// Should work well if assumed the two vectors are in the same plane (the plane of the boat). 
+		// Possible to get normal to the plane by taking cross of rudder normal and keel normal. As these are wholly relative to the boat it should give plane normal.
+		// After that its possible to get the projected component of velocity in the plane.
+		// TODO: Make vectors exist in the same plane to make calculations more accurate.
+		if (glm::length(m_Velocity) > 0.0f)
+		{
+			const float projectedArea = glm::dot(rudderNormal, normalize(m_Velocity));
+
+			const vec3 rudderLiftForce = 0.5f * rudderLiftCoefficient * NaturalConstants::DENSITY_WATER * velocitySquared * rudderArea * projectedArea * -rudderNormal;
+
+			AddForceAtPosition(rudderGlobalPos, rudderLiftForce);
+		}
+	}
 
 
 	// See if rudder is below water.
 	// See angle of the rudder.
 	// See how well rudder is aligned with the velocity of the boat. Absolute value of the dot product between normalized normal vector and velocity. 
-	// Determine the resulting drag force by taking the maximum amount of drag (90 deg turned against the velocity)
+	// Determine the resulting drag force by taking the maximum amount of drag (90 deg turned against the velocity).
 	// multiplied with the previously calculated dot product.
 	// Further scale with velocity squared to get accurate drag force.
 	// The direction of the normal force should be opposite of the current normal of the rudder. 
 	// Apply force at rudders position.
 }
 
-glm::vec3 BoatObject::CalculateLiftForce(const vec3 windForce) const
+glm::vec3 BoatObject::CalculateSailLiftForce(const vec3 windForce) const
 {
 	const vec3 globalSailDirection = m_SailObject.GetGlobalSailDirection();
 	// This projection gives how much of the wind's force is acted in the direction of the sail.

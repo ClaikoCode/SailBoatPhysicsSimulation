@@ -15,8 +15,6 @@ SailObject::SailObject()
 	InitSailMesh();
 }
 
-void SailObject::Update() {}
-
 void SailObject::Draw()
 {
 	DefaultDraw();

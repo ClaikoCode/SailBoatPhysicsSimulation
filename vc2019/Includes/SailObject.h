@@ -8,7 +8,7 @@ public:
 	SailObject();
 	~SailObject() = default;
 
-	void Update() override;
+	void Update() override {};
 	void Draw() override;
 
 	// Expects angle in radians. 

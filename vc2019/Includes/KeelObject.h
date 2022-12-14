@@ -10,5 +10,6 @@ public:
 	void Draw() override {};
 	void Update() override {};
 
+	// Get the direction of the keel's normal in world space.
 	vec3 GetGlobalKeelNormal();
 };
